@@ -15,6 +15,12 @@ export default function BookingPage() {
     const [selectedTime, setSelectedTime] = useState('');
     const [guestCount, setGuestCount] = useState(1);
     const [notes, setNotes] = useState('');
+    const [guestDetails, setGuestDetails] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: ''
+    });
 
     useEffect(() => {
         const fetchService = async () => {
@@ -43,13 +49,10 @@ export default function BookingPage() {
                     adults: guestCount,
                     children: 0
                 },
-                guestDetails: {
-                    firstName: 'Guest', // You may want to collect this in the form
-                    lastName: 'User',
-                    email: '', // You may want to collect this in the form
-                    phone: ''
-                },
-                specialRequests: notes
+                guestDetails,
+                specialRequests: notes,
+                bookingSource: 'online',
+                currency: 'VUV'
             });
 
             alert('Booking created successfully! 🎉');
@@ -107,6 +110,53 @@ export default function BookingPage() {
                             required
                         />
                         <p className="text-xs text-gray-500 mt-1">Max capacity: {service.capacity}</p>
+                    </div>
+
+                    <div className="border-t pt-4 mt-4">
+                        <h3 className="font-semibold mb-3">Guest Information</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-2">First Name *</label>
+                                <input
+                                    type="text"
+                                    value={guestDetails.firstName}
+                                    onChange={(e) => setGuestDetails({ ...guestDetails, firstName: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-vanuatu-blue"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Last Name *</label>
+                                <input
+                                    type="text"
+                                    value={guestDetails.lastName}
+                                    onChange={(e) => setGuestDetails({ ...guestDetails, lastName: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-vanuatu-blue"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Email *</label>
+                                <input
+                                    type="email"
+                                    value={guestDetails.email}
+                                    onChange={(e) => setGuestDetails({ ...guestDetails, email: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-vanuatu-blue"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Phone *</label>
+                                <input
+                                    type="tel"
+                                    value={guestDetails.phone}
+                                    onChange={(e) => setGuestDetails({ ...guestDetails, phone: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-vanuatu-blue"
+                                    placeholder="+678..."
+                                    required
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div>

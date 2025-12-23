@@ -145,13 +145,14 @@ export default function PropertyBookingPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2">Phone</label>
+                                        <label className="block text-sm font-medium mb-2">Phone *</label>
                                         <input
                                             type="tel"
                                             value={guestDetails.phone}
                                             onChange={(e) => setGuestDetails({ ...guestDetails, phone: e.target.value })}
                                             className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-vanuatu-blue"
                                             placeholder="+678..."
+                                            required
                                         />
                                     </div>
                                 </div>

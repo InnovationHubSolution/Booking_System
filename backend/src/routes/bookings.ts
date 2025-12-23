@@ -23,6 +23,13 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
             currency
         } = req.body;
 
+        // Validate guest details
+        if (!guestDetails || !guestDetails.firstName || !guestDetails.lastName || !guestDetails.email || !guestDetails.phone) {
+            return res.status(400).json({ 
+                message: 'Guest details are incomplete. Please provide first name, last name, email, and phone number.' 
+            });
+        }
+
         const property = await Property.findById(propertyId);
         if (!property) {
             return res.status(404).json({ message: 'Property not found' });
@@ -83,7 +90,15 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
         // Generate room number for allocation
         const roomNumber = `${property.name.substring(0, 3).toUpperCase()}-${roomType.substring(0, 3).toUpperCase()}-${String(conflictingBookings.length + 1).padStart(3, '0')}`;
 
+        // Generate unique reservation and reference numbers
+        const timestamp = Date.now().toString(36).toUpperCase();
+        const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const reservationNumber = `VU-${timestamp}-${random}`;
+        const referenceNumber = `BK-${property.name.substring(0, 3).toUpperCase()}-${timestamp}`;
+
         const booking = new Booking({
+            reservationNumber,
+            referenceNumber,
             bookingType: 'property',
             bookingSource: req.body.bookingSource || 'online',
             userId: req.user?.userId,
@@ -148,7 +163,14 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
 // Create booking for service (legacy)
 router.post('/service', auth, async (req: AuthRequest, res: Response) => {
     try {
-        const { serviceId, checkInDate, checkOutDate, guestCount, guestDetails } = req.body;
+        const { serviceId, checkInDate, checkOutDate, guestCount, guestDetails, currency } = req.body;
+
+        // Validate guest details
+        if (!guestDetails || !guestDetails.firstName || !guestDetails.lastName || !guestDetails.email || !guestDetails.phone) {
+            return res.status(400).json({ 
+                message: 'Guest details are incomplete. Please provide first name, last name, email, and phone number.' 
+            });
+        }
 
         const service = await Service.findById(serviceId);
         if (!service) {
@@ -156,15 +178,45 @@ router.post('/service', auth, async (req: AuthRequest, res: Response) => {
         }
 
         const duration = (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60);
-        const totalPrice = (duration / service.duration) * service.price * (guestCount?.adults || 1);
+        const quantity = Math.max(1, guestCount?.adults || 1);
+        const unitPrice = service.price;
+        const subtotal = unitPrice * quantity;
+        const taxRate = 15;
+        const taxAmount = (subtotal * taxRate) / 100;
+        const totalAmount = subtotal + taxAmount;
+
+        // Generate unique reservation and reference numbers
+        const timestamp = Date.now().toString(36).toUpperCase();
+        const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const reservationNumber = `VU-SVC-${timestamp}-${random}`;
+        const referenceNumber = `SVC-${service.name.substring(0, 3).toUpperCase()}-${timestamp}`;
 
         const booking = new Booking({
+            reservationNumber,
+            referenceNumber,
+            bookingType: 'service',
+            bookingSource: req.body.bookingSource || 'online',
             userId: req.user?.userId,
             serviceId,
             checkInDate,
             checkOutDate,
             nights: 1,
-            totalPrice,
+            totalPrice: totalAmount,
+            pricing: {
+                unitPrice,
+                quantity,
+                subtotal,
+                discountAmount: 0,
+                taxRate,
+                taxAmount,
+                totalAmount,
+                currency: currency || 'VUV'
+            },
+            payment: {
+                status: 'unpaid',
+                paidAmount: 0,
+                remainingAmount: totalAmount
+            },
             guestCount: {
                 adults: guestCount?.adults || 1,
                 children: guestCount?.children || 0
@@ -173,6 +225,7 @@ router.post('/service', auth, async (req: AuthRequest, res: Response) => {
         });
 
         await booking.save();
+        await booking.populate('serviceId');
         res.status(201).json(booking);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
