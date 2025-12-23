@@ -3,6 +3,8 @@ import Booking from '../models/Booking';
 import Property from '../models/Property';
 import Service from '../models/Service';
 import { auth, AuthRequest } from '../middleware/auth';
+import availabilityService from '../services/availabilityService';
+import paymentService from '../services/paymentService';
 
 const router = express.Router();
 
@@ -16,7 +18,9 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
             checkOutDate,
             guestCount,
             guestDetails,
-            specialRequests
+            specialRequests,
+            discountCode,
+            currency
         } = req.body;
 
         const property = await Property.findById(propertyId);
@@ -39,7 +43,24 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
             return res.status(404).json({ message: 'Room type not found' });
         }
 
-        const totalPrice = room.pricePerNight * nights;
+        // Validate and apply discount if provided
+        let discount;
+        if (discountCode) {
+            const discountValidation = await paymentService.validateDiscountCode(discountCode, 'property');
+            if (discountValidation.valid) {
+                discount = discountValidation.discount;
+            }
+        }
+
+        // Calculate comprehensive pricing
+        const pricing = paymentService.calculatePricing(
+            room.pricePerNight,
+            nights,
+            discount,
+            15 // 15% VAT for Vanuatu
+        );
+
+        const totalPrice = pricing.totalAmount;
 
         // Check availability
         const conflictingBookings = await Booking.find({
@@ -52,23 +73,67 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
         });
 
         if (conflictingBookings.length >= room.count) {
-            return res.status(400).json({ message: 'Room not available for selected dates' });
+            return res.status(400).json({
+                message: 'Room not available for selected dates',
+                conflictingBookings: conflictingBookings.length,
+                availableRooms: room.count - conflictingBookings.length
+            });
         }
 
+        // Generate room number for allocation
+        const roomNumber = `${property.name.substring(0, 3).toUpperCase()}-${roomType.substring(0, 3).toUpperCase()}-${String(conflictingBookings.length + 1).padStart(3, '0')}`;
+
         const booking = new Booking({
+            bookingType: 'property',
+            bookingSource: req.body.bookingSource || 'online',
             userId: req.user?.userId,
             propertyId,
             roomType,
             checkInDate,
             checkOutDate,
             nights,
-            totalPrice,
+            totalPrice, // Legacy field
+            // New comprehensive pricing
+            pricing: {
+                unitPrice: room.pricePerNight,
+                quantity: nights,
+                subtotal: pricing.subtotal,
+                discount: discount ? {
+                    type: discount.type,
+                    value: discount.value,
+                    code: discount.code,
+                    reason: discount.reason
+                } : undefined,
+                discountAmount: pricing.discountAmount,
+                taxRate: pricing.taxRate,
+                taxAmount: pricing.taxAmount,
+                totalAmount: pricing.totalAmount,
+                currency: currency || 'VUV'
+            },
+            // Payment tracking
+            payment: {
+                status: 'unpaid',
+                paidAmount: 0,
+                remainingAmount: pricing.totalAmount
+            },
             guestCount: {
                 adults: guestCount?.adults || 1,
                 children: guestCount?.children || 0
             },
             guestDetails,
-            specialRequests
+            specialRequests,
+            // Allocate resource
+            resourceAllocation: {
+                resourceId: roomNumber,
+                resourceType: 'room',
+                resourceName: `${roomType} - ${roomNumber}`,
+                capacity: room.maxGuests,
+                allocatedQuantity: (guestCount?.adults || 1) + (guestCount?.children || 0),
+                availabilityStatus: 'allocated',
+                assignedBy: req.user?.userId,
+                assignedAt: new Date(),
+                notes: `Auto-assigned to ${guestDetails.firstName} ${guestDetails.lastName}`
+            }
         });
 
         await booking.save();

@@ -57,8 +57,8 @@ export default function Services() {
                         key={cat}
                         onClick={() => setFilter(cat)}
                         className={`px-4 py-2 rounded-lg ${filter === cat
-                                ? 'bg-vanuatu-blue text-white'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            ? 'bg-vanuatu-blue text-white'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                             }`}
                     >
                         {cat}

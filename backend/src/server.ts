@@ -12,6 +12,9 @@ import flightRoutes from './routes/flights';
 import carRentalRoutes from './routes/carRentals';
 import transferRoutes from './routes/transfers';
 import packageRoutes from './routes/packages';
+import resourceRoutes from './routes/resources';
+import paymentRoutes from './routes/payments';
+import advancedRoutes from './routes/advanced';
 
 dotenv.config();
 
@@ -30,6 +33,9 @@ app.use('/api/flights', flightRoutes);
 app.use('/api/car-rentals', carRentalRoutes);
 app.use('/api/transfers', transferRoutes);
 app.use('/api/packages', packageRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/advanced', advancedRoutes);
 
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Vanuatu Booking System API' });

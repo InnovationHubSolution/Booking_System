@@ -138,8 +138,8 @@ export default function HostDashboard() {
                     <div className="flex">
                         <button
                             className={`px-6 py-4 font-semibold ${activeTab === 'properties'
-                                    ? 'border-b-2 border-vanuatu-blue text-vanuatu-blue'
-                                    : 'text-gray-600'
+                                ? 'border-b-2 border-vanuatu-blue text-vanuatu-blue'
+                                : 'text-gray-600'
                                 }`}
                             onClick={() => setActiveTab('properties')}
                         >
@@ -147,8 +147,8 @@ export default function HostDashboard() {
                         </button>
                         <button
                             className={`px-6 py-4 font-semibold ${activeTab === 'bookings'
-                                    ? 'border-b-2 border-vanuatu-blue text-vanuatu-blue'
-                                    : 'text-gray-600'
+                                ? 'border-b-2 border-vanuatu-blue text-vanuatu-blue'
+                                : 'text-gray-600'
                                 }`}
                             onClick={() => setActiveTab('bookings')}
                         >
@@ -186,8 +186,8 @@ export default function HostDashboard() {
                                                     </div>
                                                     <span
                                                         className={`px-3 py-1 rounded-full text-sm ${property.isActive
-                                                                ? 'bg-green-100 text-green-700'
-                                                                : 'bg-gray-100 text-gray-700'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : 'bg-gray-100 text-gray-700'
                                                             }`}
                                                     >
                                                         {property.isActive ? 'Active' : 'Inactive'}
@@ -263,10 +263,10 @@ export default function HostDashboard() {
                                                     </div>
                                                     <span
                                                         className={`px-3 py-1 rounded-full text-sm inline-block ${booking.status === 'confirmed'
-                                                                ? 'bg-green-100 text-green-700'
-                                                                : booking.status === 'pending'
-                                                                    ? 'bg-yellow-100 text-yellow-700'
-                                                                    : 'bg-gray-100 text-gray-700'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : booking.status === 'pending'
+                                                                ? 'bg-yellow-100 text-yellow-700'
+                                                                : 'bg-gray-100 text-gray-700'
                                                             }`}
                                                     >
                                                         {booking.status.charAt(0).toUpperCase() +

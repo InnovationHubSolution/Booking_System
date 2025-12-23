@@ -54,9 +54,21 @@ export default function MyBookings() {
             ) : (
                 <div className="space-y-4">
                     {bookings.map((booking) => (
-                        <div key={booking._id} className="bg-white rounded-lg shadow-md p-6">
+                        <div key={booking._id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" onClick={() => window.location.href = `/booking/${booking._id}`}>
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
+                                    {booking.reservationNumber && (
+                                        <div className="mb-2">
+                                            <span className="bg-[#004D7A] text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                                {booking.reservationNumber}
+                                            </span>
+                                            {booking.bookingSource && (
+                                                <span className="ml-2 text-sm text-gray-500">
+                                                    via {booking.bookingSource}
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
                                     <h3 className="text-xl font-semibold mb-2 text-vanuatu-blue">
                                         {booking.serviceId?.name}
                                     </h3>
@@ -80,12 +92,12 @@ export default function MyBookings() {
                                 <div className="text-right">
                                     <span
                                         className={`inline-block px-3 py-1 rounded-full text-sm font-semibold mb-2 ${booking.status === 'confirmed'
-                                                ? 'bg-green-100 text-green-800'
-                                                : booking.status === 'pending'
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : booking.status === 'cancelled'
-                                                        ? 'bg-red-100 text-red-800'
-                                                        : 'bg-blue-100 text-blue-800'
+                                            ? 'bg-green-100 text-green-800'
+                                            : booking.status === 'pending'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : booking.status === 'cancelled'
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-blue-100 text-blue-800'
                                             }`}
                                     >
                                         {booking.status.toUpperCase()}

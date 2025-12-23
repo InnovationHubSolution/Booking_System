@@ -12,6 +12,7 @@ import Wishlist from './pages/Wishlist';
 import HostDashboard from './pages/HostDashboard';
 import BookingPage from './pages/BookingPage';
 import MyBookings from './pages/MyBookings';
+import BookingDetails from './pages/BookingDetails';
 import AdminDashboard from './pages/AdminDashboard';
 import FlightSearch from './pages/FlightSearch';
 import Packages from './pages/Packages';
@@ -55,6 +56,10 @@ function App() {
                     <Route
                         path="/my-bookings"
                         element={token ? <MyBookings /> : <Navigate to="/login" />}
+                    />
+                    <Route
+                        path="/booking/:bookingId"
+                        element={token ? <BookingDetails /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/admin"
