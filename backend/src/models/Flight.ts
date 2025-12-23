@@ -33,7 +33,19 @@ export interface IFlight extends Document {
     aircraft: {
         type: string;
         model: string;
+        seatConfiguration?: string; // e.g., "3-3-3" for economy
     };
+    seatMap?: {
+        row: number;
+        seats: {
+            number: string; // e.g., "12A"
+            class: 'economy' | 'business' | 'first';
+            type: 'window' | 'middle' | 'aisle';
+            isAvailable: boolean;
+            isExtraLegroom: boolean;
+            price?: number; // Additional cost for seat selection
+        }[];
+    }[];
     classes: {
         economy: {
             available: number;
@@ -41,8 +53,11 @@ export interface IFlight extends Document {
             baggage: {
                 cabin: string; // e.g., "7kg"
                 checked: string; // e.g., "23kg"
+                additionalBaggagePrice?: number; // Price per additional bag
             };
             amenities: string[];
+            mealIncluded: boolean;
+            seatSelection: boolean;
         };
         business?: {
             available: number;
@@ -50,8 +65,13 @@ export interface IFlight extends Document {
             baggage: {
                 cabin: string;
                 checked: string;
+                additionalBaggagePrice?: number;
             };
             amenities: string[];
+            mealIncluded: boolean;
+            seatSelection: boolean;
+            loungeAccess: boolean;
+            priorityBoarding: boolean;
         };
         firstClass?: {
             available: number;
@@ -59,8 +79,42 @@ export interface IFlight extends Document {
             baggage: {
                 cabin: string;
                 checked: string;
+                additionalBaggagePrice?: number;
             };
             amenities: string[];
+            mealIncluded: boolean;
+            seatSelection: boolean;
+            loungeAccess: boolean;
+            priorityBoarding: boolean;
+            privateSuite: boolean;
+        };
+    };
+    addons?: {
+        travelInsurance: {
+            available: boolean;
+            price: number;
+            coverage: string[];
+        };
+        priorityBoarding: {
+            available: boolean;
+            price: number;
+        };
+        extraBaggage: {
+            available: boolean;
+            pricePerBag: number;
+            maxWeight: string;
+        };
+        mealUpgrade: {
+            available: boolean;
+            options: {
+                name: string;
+                price: number;
+                description: string;
+            }[];
+        };
+        loungeAccess: {
+            available: boolean;
+            price: number;
         };
     };
     stops: number; // 0 for direct, 1+ for connecting
@@ -76,6 +130,14 @@ export interface IFlight extends Document {
     isInternational: boolean;
     currency: string;
     isActive: boolean;
+    flexibleDates?: {
+        minusThreeDays?: number; // Price 3 days before
+        minusTwoDays?: number;
+        minusOneDay?: number;
+        plusOneDay?: number;
+        plusTwoDays?: number;
+        plusThreeDays?: number;
+    };
     createdAt: Date;
     updatedAt: Date;
 }

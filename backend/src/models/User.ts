@@ -17,6 +17,54 @@ export interface IUser extends Document {
     };
     isHost: boolean;
     verified: boolean;
+    savedPaymentMethods?: {
+        type: 'card' | 'paypal' | 'mobile';
+        lastFour?: string;
+        brand?: string; // Visa, Mastercard, etc.
+        expiryMonth?: number;
+        expiryYear?: number;
+        isDefault: boolean;
+        tokenId: string; // Encrypted token from payment provider
+    }[];
+    travelerProfiles?: {
+        firstName: string;
+        lastName: string;
+        dateOfBirth?: Date;
+        passportNumber?: string;
+        passportExpiry?: Date;
+        nationality?: string;
+        frequentFlyerNumber?: string;
+        specialRequirements?: string[];
+    }[];
+    preferences?: {
+        currency: string;
+        language: string;
+        notifications: {
+            email: boolean;
+            sms: boolean;
+            push: boolean;
+            marketing: boolean;
+        };
+        dietaryRestrictions?: string[];
+    };
+    loyaltyProgram?: {
+        memberId: string;
+        tier: 'bronze' | 'silver' | 'gold' | 'platinum';
+        points: number;
+        lifetimeBookings: number;
+        joinedAt: Date;
+    };
+    savedSearches?: {
+        searchType: 'property' | 'flight' | 'car' | 'package';
+        criteria: any;
+        name?: string;
+        createdAt: Date;
+    }[];
+    recentlyViewed?: {
+        itemType: 'property' | 'flight' | 'car' | 'service';
+        itemId: mongoose.Types.ObjectId;
+        viewedAt: Date;
+    }[];
     createdAt: Date;
 }
 
@@ -37,6 +85,64 @@ const UserSchema: Schema = new Schema({
     },
     isHost: { type: Boolean, default: false },
     verified: { type: Boolean, default: false },
+    savedPaymentMethods: [{
+        type: { type: String, enum: ['card', 'paypal', 'mobile'] },
+        lastFour: { type: String },
+        brand: { type: String },
+        expiryMonth: { type: Number },
+        expiryYear: { type: Number },
+        isDefault: { type: Boolean, default: false },
+        tokenId: { type: String, required: true }
+    }],
+    travelerProfiles: [{
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
+        dateOfBirth: { type: Date },
+        passportNumber: { type: String },
+        passportExpiry: { type: Date },
+        nationality: { type: String },
+        frequentFlyerNumber: { type: String },
+        specialRequirements: [{ type: String }]
+    }],
+    preferences: {
+        currency: { type: String, default: 'VUV' },
+        language: { type: String, default: 'en' },
+        notifications: {
+            email: { type: Boolean, default: true },
+            sms: { type: Boolean, default: true },
+            push: { type: Boolean, default: true },
+            marketing: { type: Boolean, default: false }
+        },
+        dietaryRestrictions: [{ type: String }]
+    },
+    loyaltyProgram: {
+        memberId: { type: String },
+        tier: {
+            type: String,
+            enum: ['bronze', 'silver', 'gold', 'platinum'],
+            default: 'bronze'
+        },
+        points: { type: Number, default: 0 },
+        lifetimeBookings: { type: Number, default: 0 },
+        joinedAt: { type: Date, default: Date.now }
+    },
+    savedSearches: [{
+        searchType: {
+            type: String,
+            enum: ['property', 'flight', 'car', 'package']
+        },
+        criteria: { type: Schema.Types.Mixed },
+        name: { type: String },
+        createdAt: { type: Date, default: Date.now }
+    }],
+    recentlyViewed: [{
+        itemType: {
+            type: String,
+            enum: ['property', 'flight', 'car', 'service']
+        },
+        itemId: { type: Schema.Types.ObjectId },
+        viewedAt: { type: Date, default: Date.now }
+    }],
     createdAt: { type: Date, default: Date.now }
 });
 

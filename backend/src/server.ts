@@ -15,6 +15,7 @@ import packageRoutes from './routes/packages';
 import resourceRoutes from './routes/resources';
 import paymentRoutes from './routes/payments';
 import advancedRoutes from './routes/advanced';
+import promotionRoutes from './routes/promotions';
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use('/api/packages', packageRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/advanced', advancedRoutes);
+app.use('/api/promotions', promotionRoutes);
 
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', message: 'Vanuatu Booking System API' });

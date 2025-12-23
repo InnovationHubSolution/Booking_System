@@ -11,11 +11,13 @@ import PropertyDetails from './pages/PropertyDetails';
 import Wishlist from './pages/Wishlist';
 import HostDashboard from './pages/HostDashboard';
 import BookingPage from './pages/BookingPage';
+import PropertyBookingPage from './pages/PropertyBookingPage';
 import MyBookings from './pages/MyBookings';
 import BookingDetails from './pages/BookingDetails';
 import AdminDashboard from './pages/AdminDashboard';
 import FlightSearch from './pages/FlightSearch';
 import Packages from './pages/Packages';
+import MapView from './pages/MapView';
 
 function App() {
     const { token } = useAuthStore();
@@ -30,6 +32,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/properties" element={<PropertySearch />} />
+                    <Route path="/map" element={<MapView />} />
                     <Route path="/property/:id" element={<PropertyDetails />} />
                     <Route path="/flights" element={<FlightSearch />} />
                     <Route path="/packages" element={<Packages />} />
@@ -47,7 +50,7 @@ function App() {
                     />
                     <Route
                         path="/booking/property"
-                        element={token ? <BookingPage /> : <Navigate to="/login" />}
+                        element={token ? <PropertyBookingPage /> : <Navigate to="/login" />}
                     />
                     <Route
                         path="/booking/flight"

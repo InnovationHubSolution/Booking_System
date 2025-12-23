@@ -137,6 +137,10 @@ const FlightSearch = () => {
         const flightClass = searchParams.class as 'economy' | 'business';
         const classInfo = flight.classes[flightClass];
 
+        if (!classInfo) {
+            return null;
+        }
+
         return (
             <div
                 onClick={onSelect}
@@ -181,15 +185,15 @@ const FlightSearch = () => {
 
                             <div className="flex items-center justify-between mt-3 pt-3 border-t">
                                 <div className="text-sm text-gray-600">
-                                    <p>Baggage: {classInfo.baggage.cabin} cabin, {classInfo.baggage.checked} checked</p>
-                                    <p className="text-xs">{classInfo.amenities.join(' • ')}</p>
+                                    <p>Baggage: {classInfo?.baggage.cabin} cabin, {classInfo?.baggage.checked} checked</p>
+                                    <p className="text-xs">{classInfo?.amenities.join(' • ')}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-2xl font-bold text-[#004D7A]">
-                                        {formatPrice(classInfo.price, false)}
+                                        {formatPrice(classInfo?.price || 0, false)}
                                     </p>
                                     <p className="text-sm text-gray-600">per person</p>
-                                    <p className="text-xs text-green-600">{classInfo.available} seats left</p>
+                                    <p className="text-xs text-green-600">{classInfo?.available} seats left</p>
                                 </div>
                             </div>
                         </div>

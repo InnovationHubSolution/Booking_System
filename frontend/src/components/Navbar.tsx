@@ -6,6 +6,7 @@ export default function Navbar() {
     const { token, user, logout } = useAuthStore();
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(false);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -26,6 +27,12 @@ export default function Navbar() {
                         </Link>
                         <Link to="/services" className="text-white hover:text-vanuatu-yellow transition">
                             Experiences
+                        </Link>
+                        <Link 
+                            to="/map" 
+                            className="text-white hover:text-vanuatu-yellow transition font-semibold bg-blue-500/30 px-3 py-1.5 rounded-lg hover:bg-blue-500/50"
+                        >
+                            🗺️ Map
                         </Link>
 
                         {token ? (
@@ -101,12 +108,104 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile menu button */}
-                    <button className="md:hidden text-white">
+                    <button 
+                        onClick={() => setShowMobileMenu(!showMobileMenu)}
+                        className="md:hidden text-white"
+                    >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="width" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 </div>
+
+                {/* Mobile Menu */}
+                {showMobileMenu && (
+                    <div className="md:hidden bg-vanuatu-blue border-t border-blue-600 py-4">
+                        <Link 
+                            to="/properties" 
+                            className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                            onClick={() => setShowMobileMenu(false)}
+                        >
+                            Properties
+                        </Link>
+                        <Link 
+                            to="/services" 
+                            className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                            onClick={() => setShowMobileMenu(false)}
+                        >
+                            Experiences
+                        </Link>
+                        <Link 
+                            to="/map" 
+                            className="block text-white hover:text-vanuatu-yellow transition px-4 py-2 font-semibold bg-blue-500/20 rounded"
+                            onClick={() => setShowMobileMenu(false)}
+                        >
+                            🗺️ Map
+                        </Link>
+                        {token ? (
+                            <>
+                                <Link 
+                                    to="/wishlist" 
+                                    className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    ❤️ Wishlist
+                                </Link>
+                                <Link 
+                                    to="/my-bookings" 
+                                    className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    My Trips
+                                </Link>
+                                {(user?.role === 'host' || user?.isHost) && (
+                                    <Link 
+                                        to="/host/dashboard" 
+                                        className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                        onClick={() => setShowMobileMenu(false)}
+                                    >
+                                        Host Dashboard
+                                    </Link>
+                                )}
+                                {user?.role === 'admin' && (
+                                    <Link 
+                                        to="/admin" 
+                                        className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                        onClick={() => setShowMobileMenu(false)}
+                                    >
+                                        Admin
+                                    </Link>
+                                )}
+                                <button
+                                    onClick={() => {
+                                        handleLogout();
+                                        setShowMobileMenu(false);
+                                    }}
+                                    className="block w-full text-left text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link 
+                                    to="/login" 
+                                    className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    Login
+                                </Link>
+                                <Link 
+                                    to="/register" 
+                                    className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                                    onClick={() => setShowMobileMenu(false)}
+                                >
+                                    Sign Up
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
         </nav>
     );

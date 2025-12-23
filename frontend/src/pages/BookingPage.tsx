@@ -28,25 +28,35 @@ export default function BookingPage() {
         e.preventDefault();
 
         const [hours, minutes] = selectedTime.split(':');
-        const startDate = new Date(selectedDate);
-        startDate.setHours(parseInt(hours), parseInt(minutes), 0);
+        const checkInDate = new Date(selectedDate);
+        checkInDate.setHours(parseInt(hours), parseInt(minutes), 0);
 
-        const endDate = new Date(startDate);
-        endDate.setMinutes(endDate.getMinutes() + service.duration);
+        const checkOutDate = new Date(checkInDate);
+        checkOutDate.setMinutes(checkOutDate.getMinutes() + service.duration);
 
         try {
-            await api.post('/bookings', {
+            await api.post('/bookings/service', {
                 serviceId,
-                startDate,
-                endDate,
-                guestCount,
-                notes
+                checkInDate,
+                checkOutDate,
+                guestCount: {
+                    adults: guestCount,
+                    children: 0
+                },
+                guestDetails: {
+                    firstName: 'Guest', // You may want to collect this in the form
+                    lastName: 'User',
+                    email: '', // You may want to collect this in the form
+                    phone: ''
+                },
+                specialRequests: notes
             });
 
             alert('Booking created successfully! 🎉');
             navigate('/my-bookings');
         } catch (error: any) {
-            alert(error.response?.data?.message || 'Booking failed');
+            console.error('Booking error:', error);
+            alert(error.response?.data?.message || 'Booking failed. Please try again.');
         }
     };
 

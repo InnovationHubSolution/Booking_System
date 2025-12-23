@@ -17,7 +17,18 @@ export interface IReview extends Document {
     response?: {
         text: string;
         date: Date;
+        userId?: mongoose.Types.ObjectId; // Host/manager who responded
     };
+    verified: boolean; // Only from confirmed bookings
+    travelerType?: 'solo' | 'couple' | 'family' | 'business' | 'group';
+    roomType?: string;
+    stayDuration?: number; // nights
+    tripPurpose?: 'leisure' | 'business' | 'family-vacation' | 'romantic' | 'adventure';
+    likedFeatures?: string[]; // What the guest liked most
+    improvementSuggestions?: string[]; // What could be better
+    wouldRecommend: boolean;
+    flagged: boolean; // For inappropriate content
+    flagReason?: string;
     createdAt: Date;
 }
 
@@ -37,8 +48,25 @@ const ReviewSchema: Schema = new Schema({
     helpful: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     response: {
         text: { type: String },
-        date: { type: Date }
+        date: { type: Date },
+        userId: { type: Schema.Types.ObjectId, ref: 'User' }
     },
+    verified: { type: Boolean, default: true },
+    travelerType: {
+        type: String,
+        enum: ['solo', 'couple', 'family', 'business', 'group']
+    },
+    roomType: { type: String },
+    stayDuration: { type: Number },
+    tripPurpose: {
+        type: String,
+        enum: ['leisure', 'business', 'family-vacation', 'romantic', 'adventure']
+    },
+    likedFeatures: [{ type: String }],
+    improvementSuggestions: [{ type: String }],
+    wouldRecommend: { type: Boolean, default: true },
+    flagged: { type: Boolean, default: false },
+    flagReason: { type: String },
     createdAt: { type: Date, default: Date.now }
 });
 
