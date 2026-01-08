@@ -1,5 +1,6 @@
 import express from 'express';
 import paymentService from '../services/paymentService';
+import stripeService from '../services/stripeService';
 import { auth, AuthRequest } from '../middleware/auth';
 
 const router = express.Router();
@@ -82,7 +83,11 @@ router.post('/process', auth, async (req: AuthRequest, res) => {
             });
         }
 
-        const validMethods = ['cash', 'card', 'mobile', 'transfer', 'paypal', 'stripe'];
+        const validMethods = [
+            'cash', 'credit-card', 'debit-card', 'mobile-money', 'bank-transfer',
+            'paypal', 'stripe', 'western-union', 'money-gram', 'travelex', 'eftpos',
+            'american-express', 'diners-club', 'alipay', 'wechat-pay', 'unionpay'
+        ];
         if (!validMethods.includes(paymentMethod)) {
             return res.status(400).json({
                 message: `Invalid payment method. Must be one of: ${validMethods.join(', ')}`
@@ -278,6 +283,71 @@ router.patch('/:bookingId/update-status', auth, async (req: AuthRequest, res) =>
         });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
+    }
+});
+
+/**
+ * POST /api/payments/create-intent
+ * Create a Stripe payment intent for a booking
+ */
+router.post('/create-intent', auth, async (req: AuthRequest, res) => {
+    try {
+        const { bookingId, amount, currency = 'usd' } = req.body;
+
+        if (!bookingId || !amount) {
+            return res.status(400).json({
+                message: 'Booking ID and amount are required'
+            });
+        }
+
+        const paymentReference = paymentService.generatePaymentReference();
+
+        const paymentIntent = await stripeService.createPaymentIntent(
+            amount,
+            currency,
+            {
+                booking_id: bookingId,
+                payment_reference: paymentReference,
+                user_id: req.user?.id || 'anonymous'
+            }
+        );
+
+        res.json({
+            success: true,
+            client_secret: paymentIntent.client_secret,
+            payment_intent_id: paymentIntent.id,
+            amount: paymentIntent.amount,
+            currency: paymentIntent.currency
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: `Failed to create payment intent: ${error.message}`
+        });
+    }
+});
+
+/**
+ * POST /api/payments/webhook
+ * Handle Stripe webhook events
+ */
+router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+        const signature = req.headers['stripe-signature'] as string;
+
+        if (!signature) {
+            return res.status(400).json({ message: 'Missing Stripe signature' });
+        }
+
+        const result = await stripeService.handleWebhook(
+            req.body,
+            signature
+        );
+
+        res.json(result);
+    } catch (error: any) {
+        console.error('Webhook error:', error);
+        res.status(400).json({ message: `Webhook error: ${error.message}` });
     }
 });
 

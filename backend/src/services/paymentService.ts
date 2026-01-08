@@ -1,5 +1,6 @@
 import Booking from '../models/Booking';
 import mongoose from 'mongoose';
+import stripeService from './stripeService';
 
 /**
  * Payment Service
@@ -123,7 +124,7 @@ export const generateTransactionId = (): string => {
 export const processPayment = async (
     bookingId: string,
     amount: number,
-    paymentMethod: 'cash' | 'card' | 'mobile' | 'transfer' | 'paypal' | 'stripe',
+    paymentMethod: 'cash' | 'credit-card' | 'debit-card' | 'mobile-money' | 'bank-transfer' | 'paypal' | 'stripe' | 'western-union' | 'money-gram' | 'travelex' | 'eftpos' | 'american-express' | 'diners-club' | 'alipay' | 'wechat-pay' | 'unionpay' | 'crypto',
     paymentDetails?: any
 ): Promise<PaymentProcessingResult> => {
     try {
@@ -183,6 +184,98 @@ export const processPayment = async (
         // Generate payment reference and transaction ID
         const paymentReference = generatePaymentReference();
         const transactionId = generateTransactionId();
+
+        // Process payment based on method
+        let paymentProcessingResult;
+        switch (paymentMethod) {
+            case 'stripe':
+            case 'credit-card':
+            case 'debit-card':
+                if (paymentDetails?.paymentIntentId && paymentDetails?.paymentMethodId) {
+                    try {
+                        paymentProcessingResult = await stripeService.confirmPayment(
+                            paymentDetails.paymentIntentId,
+                            paymentDetails.paymentMethodId
+                        );
+                    } catch (error: any) {
+                        return {
+                            success: false,
+                            message: `Card payment failed: ${error.message}`,
+                            error: 'STRIPE_PAYMENT_FAILED'
+                        };
+                    }
+                } else if (paymentDetails?.card) {
+                    // Create payment intent and process
+                    try {
+                        const paymentIntent = await stripeService.createPaymentIntent(
+                            amount,
+                            booking.pricing?.currency || 'usd',
+                            {
+                                booking_id: bookingId,
+                                payment_reference: paymentReference
+                            }
+                        );
+
+                        const paymentMethodId = await stripeService.createPaymentMethod({
+                            number: paymentDetails.card.number,
+                            exp_month: paymentDetails.card.expMonth,
+                            exp_year: paymentDetails.card.expYear,
+                            cvc: paymentDetails.card.cvv,
+                            name: paymentDetails.card.name
+                        });
+
+                        paymentProcessingResult = await stripeService.confirmPayment(
+                            paymentIntent.id,
+                            paymentMethodId
+                        );
+                    } catch (error: any) {
+                        return {
+                            success: false,
+                            message: `Card payment failed: ${error.message}`,
+                            error: 'STRIPE_PROCESSING_FAILED'
+                        };
+                    }
+                }
+                break;
+
+            case 'paypal':
+                // PayPal integration would go here
+                // For now, mark as pending manual verification
+                paymentProcessingResult = { status: 'requires_payment_method' };
+                break;
+
+            case 'cash':
+                // Cash payments are confirmed when received at counter
+                paymentProcessingResult = { status: 'succeeded' };
+                break;
+
+            case 'bank-transfer':
+            case 'mobile-money':
+            case 'western-union':
+            case 'money-gram':
+                // These require manual verification
+                paymentProcessingResult = { status: 'requires_payment_method' };
+                paymentStatus = 'partial'; // Keep as partial until verified
+                break;
+
+            default:
+                paymentProcessingResult = { status: 'requires_payment_method' };
+                break;
+        }
+
+        // Check if payment was successful
+        if (paymentProcessingResult && paymentProcessingResult.status !== 'succeeded') {
+            // Payment failed or requires additional action
+            if (paymentProcessingResult.status === 'requires_payment_method') {
+                paymentStatus = 'partial'; // Mark as partial payment pending verification
+            } else {
+                return {
+                    success: false,
+                    message: 'Payment processing failed. Please try again.',
+                    error: 'PAYMENT_FAILED'
+                };
+            }
+        }
 
         // Update booking payment information
         booking.payment = {

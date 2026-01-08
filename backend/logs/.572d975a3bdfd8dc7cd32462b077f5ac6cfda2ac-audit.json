@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\.572d975a3bdfd8dc7cd32462b077f5ac6cfda2ac-audit.json",
+    "files": [
+        {
+            "date": 1767045904208,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\combined-2025-12-30.log",
+            "hash": "73a7e61fa917dacf30777823d9041152a3c01843e8b9dbce399767040b9782d9"
+        },
+        {
+            "date": 1767503055459,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\combined-2026-01-04.log",
+            "hash": "c8b609adb51134cf6c8d34ed5f23d150905d525b52d8e7f3fc0f8d5846619c1d"
+        },
+        {
+            "date": 1767560097435,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\combined-2026-01-05.log",
+            "hash": "be17664027ccc472b01ac33616235a998eb77f647de67081235e620a4c314cb5"
+        },
+        {
+            "date": 1767829263060,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\combined-2026-01-08.log",
+            "hash": "d0f8bfc6c0075ac838b5bd228512f25e178e014862efd35a607d3e31a806f1df"
+        }
+    ],
+    "hashType": "sha256"
+}

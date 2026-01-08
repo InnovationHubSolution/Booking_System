@@ -59,7 +59,7 @@ export default function Home() {
             {/* Hero Section - Booking.com Style with Blue Water Background */}
             <div className="relative h-[400px] overflow-hidden">
                 {/* Background Image - Fitted */}
-                <div 
+                <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
                         backgroundImage: `url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&q=80&fit=crop')`,
@@ -67,10 +67,10 @@ export default function Home() {
                         backgroundPosition: 'center 40%'
                     }}
                 />
-                
+
                 {/* Subtle Dark Overlay for Text Readability */}
                 <div className="absolute inset-0 bg-black/20" />
-                
+
                 <div className="relative max-w-7xl mx-auto px-4 py-16 h-full flex flex-col justify-center">
                     <div className="absolute top-4 right-4 z-20">
                         <CurrencySelector />
@@ -149,7 +149,7 @@ export default function Home() {
             {/* Why Section */}
             <div className="bg-white py-16">
                 <div className="max-w-7xl mx-auto px-4">
-                    <h2 className="text-3xl font-bold mb-12">Why Vanuatu Bookings?</h2>
+                    <h2 className="text-3xl font-bold mb-12">Why Vanuatu Travel Hub?</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div className="flex flex-col items-start p-6 bg-gray-50 rounded-lg">
                             <div className="w-16 h-16 mb-4 flex items-center justify-center"><span className="text-5xl"></span></div>
@@ -202,6 +202,78 @@ export default function Home() {
                                 </div>
                             </Link>
                         ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* NEW: Scenic Fly Tours Section */}
+            <div className="bg-gradient-to-b from-sky-50 to-white py-20">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-bold mb-3">✈️ Scenic Fly Tours</h2>
+                        <p className="text-xl text-gray-600">Experience Vanuatu from Above</p>
+                        <p className="text-gray-500 mt-2">Discover breathtaking aerial views of volcanoes, lagoons, and pristine islands</p>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8 mb-8">
+                        <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div className="relative h-48">
+                                <img src="https://images.unsplash.com/photo-1473163928189-364b2c4e1135?w=800" alt="Volcano Tour" className="w-full h-full object-cover" />
+                                <div className="absolute top-4 right-4 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-sm font-bold">
+                                    ⭐ Featured
+                                </div>
+                            </div>
+                            <div className="p-6">
+                                <h3 className="text-xl font-bold mb-2">Volcano & Islands Explorer</h3>
+                                <p className="text-gray-600 text-sm mb-4">90-minute flight over Mt. Yasur volcano and pristine coastlines</p>
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="text-2xl font-bold text-blue-600">25,000 VUV</span>
+                                    <span className="text-sm text-gray-500">per person</span>
+                                </div>
+                                <Link to="/scenic-tours" className="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition">
+                                    Learn More
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div className="relative h-48">
+                                <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800" alt="Blue Lagoon" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="p-6">
+                                <h3 className="text-xl font-bold mb-2">Blue Lagoon & Coral Reefs</h3>
+                                <p className="text-gray-600 text-sm mb-4">60-minute flight over stunning blue holes and coral gardens</p>
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="text-2xl font-bold text-blue-600">18,000 VUV</span>
+                                    <span className="text-sm text-gray-500">per person</span>
+                                </div>
+                                <Link to="/scenic-tours" className="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition">
+                                    Learn More
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div className="relative h-48">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="Northern Islands" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="p-6">
+                                <h3 className="text-xl font-bold mb-2">Northern Islands Paradise</h3>
+                                <p className="text-gray-600 text-sm mb-4">120-minute comprehensive tour of Espiritu Santo</p>
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="text-2xl font-bold text-blue-600">35,000 VUV</span>
+                                    <span className="text-sm text-gray-500">per person</span>
+                                </div>
+                                <Link to="/scenic-tours" className="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition">
+                                    Learn More
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="text-center">
+                        <Link
+                            to="/scenic-tours"
+                            className="inline-block bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                            View All Scenic Tours →
+                        </Link>
                     </div>
                 </div>
             </div>

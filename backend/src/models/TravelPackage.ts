@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface ITravelPackage extends Document {
+export interface ITravelPackage extends Document, IAuditFields {
     name: string;
     description: string;
     images: string[];
@@ -51,9 +53,6 @@ export interface ITravelPackage extends Document {
     reviewCount: number;
     isActive: boolean;
     isFeatured: boolean;
-    createdBy: Schema.Types.ObjectId;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 const TravelPackageSchema = new Schema({
@@ -128,5 +127,10 @@ const TravelPackageSchema = new Schema({
 TravelPackageSchema.index({ destination: 1, category: 1, isActive: 1 });
 TravelPackageSchema.index({ 'pricing.basePrice': 1 });
 TravelPackageSchema.index({ isFeatured: 1, rating: -1 });
+
+// Apply audit plugin
+TravelPackageSchema.plugin(auditPlugin, {
+    fieldsToTrack: ['pricing.basePrice', 'isActive', 'isFeatured', 'availability']
+});
 
 export default mongoose.model<ITravelPackage>('TravelPackage', TravelPackageSchema);

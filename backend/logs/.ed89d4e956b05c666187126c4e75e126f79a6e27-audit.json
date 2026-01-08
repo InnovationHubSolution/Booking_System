@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\.ed89d4e956b05c666187126c4e75e126f79a6e27-audit.json",
+    "files": [
+        {
+            "date": 1767045904206,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\error-2025-12-30.log",
+            "hash": "e6ac3976a7b65b77012fe4acef382a878c43628e362a6667aa757f7d8f86fa8c"
+        },
+        {
+            "date": 1767503055456,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\error-2026-01-04.log",
+            "hash": "5c242a23999c9d2b8042ac9db617802dca883dd405e31b397af6916903b55ad7"
+        },
+        {
+            "date": 1767560097430,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\error-2026-01-05.log",
+            "hash": "57e99d7c7912ec4d2cfc9605cf00f110754756f88e3ebc19d78ce2c7a4863e0c"
+        },
+        {
+            "date": 1767829263052,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\error-2026-01-08.log",
+            "hash": "280922cffcc4e6d74cf7249b44e7621a22824504b45b7a1912518a734378e3ba"
+        }
+    ],
+    "hashType": "sha256"
+}

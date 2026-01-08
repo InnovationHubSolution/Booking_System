@@ -193,7 +193,13 @@ const Packages = () => {
                                             center={[-17.7334, 168.3273]}
                                             zoom={10}
                                             markers={packages
-                                                .filter(pkg => pkg.destinationCoordinates)
+                                                .filter(pkg =>
+                                                    pkg.destinationCoordinates &&
+                                                    typeof pkg.destinationCoordinates.lat === 'number' &&
+                                                    typeof pkg.destinationCoordinates.lng === 'number' &&
+                                                    !isNaN(pkg.destinationCoordinates.lat) &&
+                                                    !isNaN(pkg.destinationCoordinates.lng)
+                                                )
                                                 .map(pkg => ({
                                                     position: [
                                                         pkg.destinationCoordinates!.lat,

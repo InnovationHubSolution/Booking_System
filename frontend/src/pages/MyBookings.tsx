@@ -3,39 +3,119 @@ import { format } from 'date-fns';
 import api from '../api/axios';
 import { useCurrencyStore } from '../store/currencyStore';
 import CurrencySelector from '../components/CurrencySelector';
+import {
+    NoBookingsEmptyState,
+    LoadingBookings,
+    FriendlyErrorMessage,
+    ConfirmationDialog,
+    Toast,
+    Badge
+} from '../components/PremiumUX';
+import { socketService } from '../services/socketService';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyBookings() {
     const { formatPrice } = useCurrencyStore();
+    const navigate = useNavigate();
     const [bookings, setBookings] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [cancelDialog, setCancelDialog] = useState<{ show: boolean; bookingId: string; bookingNumber: string }>({
+        show: false,
+        bookingId: '',
+        bookingNumber: ''
+    });
+    const [notification, setNotification] = useState<{ show: boolean; type: 'success' | 'error'; message: string }>({
+        show: false,
+        type: 'success',
+        message: ''
+    });
 
     useEffect(() => {
         fetchBookings();
+
+        // Real-time booking updates
+        if (socketService.isConnected()) {
+            socketService.onBookingUpdate((data) => {
+                // Refresh bookings when there's an update
+                fetchBookings();
+                showNotification('info', `Booking ${data.reservationNumber} updated`);
+            });
+
+            socketService.onBookingCancelled((data) => {
+                // Update local state
+                setBookings(prev =>
+                    prev.map(booking =>
+                        booking._id === data.bookingId
+                            ? { ...booking, status: 'cancelled' }
+                            : booking
+                    )
+                );
+                showNotification('info', `Booking cancelled successfully`);
+            });
+        }
     }, []);
+
+    const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
+        setNotification({ show: true, type: type as any, message });
+    };
 
     const fetchBookings = async () => {
         try {
+            setError(null);
             const response = await api.get('/bookings/my-bookings');
             setBookings(response.data);
-        } catch (error) {
-            console.error('Error fetching bookings:', error);
+        } catch (error: any) {
+            setError(error.response?.data?.message || error.message || 'Failed to load bookings');
         } finally {
             setLoading(false);
         }
     };
 
-    const cancelBooking = async (bookingId: string) => {
-        if (!confirm('Are you sure you want to cancel this booking?')) return;
+    const showCancelDialog = (bookingId: string, reservationNumber: string) => {
+        setCancelDialog({ show: true, bookingId, bookingNumber: reservationNumber });
+    };
 
+    const cancelBooking = async () => {
         try {
-            await api.patch(`/bookings/${bookingId}/status`, { status: 'cancelled' });
+            await api.patch(`/bookings/${cancelDialog.bookingId}/status`, { status: 'cancelled' });
+
+            // Emit real-time update
+            if (socketService.isConnected()) {
+                socketService.emitBookingUpdate(cancelDialog.bookingId, { status: 'cancelled' });
+            }
+
             fetchBookings();
-        } catch (error) {
-            alert('Failed to cancel booking');
+            showNotification('success', `Booking ${cancelDialog.bookingNumber} cancelled successfully`);
+        } catch (error: any) {
+            showNotification('error', error.response?.data?.message || 'Failed to cancel booking');
+        } finally {
+            setCancelDialog({ show: false, bookingId: '', bookingNumber: '' });
         }
     };
 
-    if (loading) return <div className="text-center py-20">Loading...</div>;
+    const generateQRCodeURL = (booking: any) => {
+        const qrData = booking.qrCode || `VU-BOOKING:${booking.reservationNumber}:${booking.bookingType || 'general'}:${Date.now()}`;
+        return `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrData)}&size=200x200`;
+    };
+
+    if (loading) return <LoadingBookings />;
+
+    if (error) {
+        return (
+            <div className="max-w-6xl mx-auto px-4 py-12">
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-4xl font-bold text-vanuatu-blue">My Bookings</h1>
+                    <CurrencySelector />
+                </div>
+                <FriendlyErrorMessage
+                    error={error}
+                    onRetry={fetchBookings}
+                    onClose={() => setError(null)}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">
@@ -45,12 +125,7 @@ export default function MyBookings() {
             </div>
 
             {bookings.length === 0 ? (
-                <div className="text-center py-12 bg-white rounded-lg shadow">
-                    <p className="text-gray-600 mb-4">No bookings yet</p>
-                    <a href="/services" className="text-vanuatu-blue hover:underline">
-                        Browse services
-                    </a>
-                </div>
+                <NoBookingsEmptyState onSearch={() => navigate('/services')} />
             ) : (
                 <div className="space-y-4">
                     {bookings.map((booking) => (
@@ -72,15 +147,22 @@ export default function MyBookings() {
                                     <h3 className="text-xl font-semibold mb-2 text-vanuatu-blue">
                                         {booking.serviceId?.name}
                                     </h3>
+                                    {booking.startDate && booking.endDate && (
+                                        <p className="text-gray-600 mb-2">
+                                            📅 {format(new Date(booking.startDate), 'PPP p')} -
+                                            {format(new Date(booking.endDate), 'p')}
+                                        </p>
+                                    )}
+                                    {booking.bookingDate && (
+                                        <p className="text-gray-600 mb-2">
+                                            🗓️ Booked: {format(new Date(booking.bookingDate), 'PPP')}
+                                        </p>
+                                    )}
                                     <p className="text-gray-600 mb-2">
-                                        📅 {format(new Date(booking.startDate), 'PPP p')} -
-                                        {format(new Date(booking.endDate), 'p')}
-                                    </p>
-                                    <p className="text-gray-600 mb-2">
-                                        👥 Guests: {booking.guestCount}
+                                        👥 Guests: {booking.guestCount || 1}
                                     </p>
                                     <p className="text-gray-600">
-                                        Total: <span className="font-semibold text-lg">{formatPrice(booking.totalPrice, false)}</span>
+                                        Total: <span className="font-semibold text-lg">{formatPrice(booking.totalPrice || booking.pricing?.totalAmount || 0, false)}</span>
                                     </p>
                                     {booking.notes && (
                                         <p className="text-gray-500 text-sm mt-2 italic">
@@ -105,7 +187,10 @@ export default function MyBookings() {
 
                                     {booking.status === 'pending' && (
                                         <button
-                                            onClick={() => cancelBooking(booking._id)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                showCancelDialog(booking._id, booking.reservationNumber);
+                                            }}
                                             className="mt-4 block bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                                         >
                                             Cancel Booking
@@ -116,6 +201,29 @@ export default function MyBookings() {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Cancel Confirmation Dialog */}
+            {cancelDialog.show && (
+                <ConfirmationDialog
+                    icon="⚠️"
+                    title="Cancel Booking"
+                    message={`Are you sure you want to cancel booking ${cancelDialog.bookingNumber}? This action cannot be undone.`}
+                    confirmText="Yes, Cancel"
+                    cancelText="Keep Booking"
+                    confirmColor="red"
+                    onConfirm={cancelBooking}
+                    onCancel={() => setCancelDialog({ show: false, bookingId: '', bookingNumber: '' })}
+                />
+            )}
+
+            {/* Notification Toast */}
+            {notification.show && (
+                <Toast
+                    type={notification.type}
+                    message={notification.message}
+                    onClose={() => setNotification({ show: false, type: 'success', message: '' })}
+                />
             )}
         </div>
     );

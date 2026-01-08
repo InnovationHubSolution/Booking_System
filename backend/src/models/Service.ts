@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IService extends Document {
+export interface IService extends Document, IAuditFields {
     name: string;
     description: string;
     category: string;
@@ -33,6 +35,11 @@ const ServiceSchema: Schema = new Schema({
     },
     isActive: { type: Boolean, default: true },
     amenities: [{ type: String }]
+});
+
+// Apply audit plugin
+ServiceSchema.plugin(auditPlugin, {
+    fieldsToTrack: ['price', 'isActive', 'capacity']
 });
 
 export default mongoose.model<IService>('Service', ServiceSchema);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import axios from '../api/axios';
 import Map from '../components/Map';
 import { useCurrencyStore } from '../store/currencyStore';
@@ -27,6 +27,7 @@ interface Property {
 }
 
 export default function PropertySearch() {
+    const [searchParams] = useSearchParams();
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
     const { formatPrice } = useCurrencyStore();
@@ -38,13 +39,21 @@ export default function PropertySearch() {
         maxPrice: 10000,
         rating: 0,
         amenities: [] as string[],
-        propertyType: '',
+        propertyType: searchParams.get('type') || '',
         sortBy: 'recommended'
     });
 
     useEffect(() => {
         searchProperties();
     }, [filters.sortBy, filters.rating, filters.propertyType]);
+
+    // Update property type filter from URL params
+    useEffect(() => {
+        const type = searchParams.get('type');
+        if (type) {
+            setFilters(prev => ({ ...prev, propertyType: type }));
+        }
+    }, [searchParams]);
 
     const searchProperties = async () => {
         setLoading(true);
@@ -76,15 +85,28 @@ export default function PropertySearch() {
         return 'Rated';
     };
 
-    const markers = properties.map(property => ({
-        id: property._id,
-        position: [property.address.coordinates.lat, property.address.coordinates.lng] as [number, number],
-        title: property.name,
-        type: 'property' as const,
-        price: property.rooms[0]?.pricePerNight,
-        rating: property.rating,
-        imageUrl: property.images[0]
-    }));
+    const markers = properties
+        .filter(property =>
+            property.address?.coordinates?.lat &&
+            property.address?.coordinates?.lng &&
+            typeof property.address.coordinates.lat === 'number' &&
+            typeof property.address.coordinates.lng === 'number' &&
+            !isNaN(property.address.coordinates.lat) &&
+            !isNaN(property.address.coordinates.lng)
+        )
+        .map(property => ({
+            position: [property.address.coordinates.lat, property.address.coordinates.lng] as [number, number],
+            popup: `
+                <div class="text-center">
+                    <img src="${property.images[0]}" alt="${property.name}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;" />
+                    <h3 class="font-bold text-lg">${property.name}</h3>
+                    <p class="text-gray-600">${property.address.city}</p>
+                    <p class="text-blue-600 font-semibold">$${property.rooms[0]?.pricePerNight}/night</p>
+                    <p class="text-yellow-500">★ ${property.rating.toFixed(1)}</p>
+                    <a href="/property/${property._id}" class="text-blue-500 hover:underline">View Details</a>
+                </div>
+            `,
+        }));
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -97,9 +119,9 @@ export default function PropertySearch() {
                             placeholder="Tanna Island"
                             className="flex-1 px-4 py-2 rounded text-gray-900"
                             value={filters.destination}
-                            onChange={(e) => setFilters({...filters, destination: e.target.value})}
+                            onChange={(e) => setFilters({ ...filters, destination: e.target.value })}
                         />
-                        <button 
+                        <button
                             onClick={searchProperties}
                             className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-8 py-2 rounded font-bold"
                         >
@@ -137,11 +159,10 @@ export default function PropertySearch() {
                                 <h3 className="text-lg font-bold text-gray-900">Map View</h3>
                                 <button
                                     onClick={() => setShowMap(!showMap)}
-                                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 ${
-                                        showMap 
-                                            ? 'bg-red-500 hover:bg-red-600 text-white' 
-                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
-                                    }`}
+                                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 ${showMap
+                                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                        }`}
                                 >
                                     {showMap ? (
                                         <>
@@ -175,7 +196,7 @@ export default function PropertySearch() {
                         {/* Filter by Section */}
                         <div className="bg-white rounded-lg p-4">
                             <h3 className="font-bold text-lg mb-4">Filter by:</h3>
-                            
+
                             {/* Budget Slider */}
                             <div className="mb-6 pb-6 border-b">
                                 <h4 className="font-semibold mb-3">Your budget (per night)</h4>
@@ -188,7 +209,7 @@ export default function PropertySearch() {
                                     max="20000"
                                     step="1000"
                                     value={filters.maxPrice}
-                                    onChange={(e) => setFilters({...filters, maxPrice: parseInt(e.target.value)})}
+                                    onChange={(e) => setFilters({ ...filters, maxPrice: parseInt(e.target.value) })}
                                     className="w-full accent-blue-600"
                                 />
                             </div>
@@ -202,7 +223,7 @@ export default function PropertySearch() {
                                             <input
                                                 type="checkbox"
                                                 checked={filters.rating >= 8}
-                                                onChange={(e) => setFilters({...filters, rating: e.target.checked ? 8 : 0})}
+                                                onChange={(e) => setFilters({ ...filters, rating: e.target.checked ? 8 : 0 })}
                                                 className="w-4 h-4"
                                             />
                                             <span className="text-sm">Very Good: 8+</span>
@@ -228,7 +249,7 @@ export default function PropertySearch() {
                                             <input
                                                 type="checkbox"
                                                 checked={filters.propertyType === 'villa'}
-                                                onChange={(e) => setFilters({...filters, propertyType: e.target.checked ? 'villa' : ''})}
+                                                onChange={(e) => setFilters({ ...filters, propertyType: e.target.checked ? 'villa' : '' })}
                                                 className="w-4 h-4"
                                             />
                                             <span className="text-sm">Vacation Homes</span>
@@ -267,7 +288,7 @@ export default function PropertySearch() {
                                 <span className="text-sm font-medium">Sort by:</span>
                                 <select
                                     value={filters.sortBy}
-                                    onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
+                                    onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
                                     className="border rounded px-3 py-1.5 text-sm font-medium"
                                 >
                                     <option value="recommended">Our top picks</option>

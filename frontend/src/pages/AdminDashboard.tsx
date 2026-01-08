@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import api from '../api/axios';
+import { socketService } from '../services/socketService';
+import { Toast, Badge, LoadingState } from '../components/PremiumUX';
 import { useCurrencyStore } from '../store/currencyStore';
 import CurrencySelector from '../components/CurrencySelector';
 
@@ -8,10 +10,55 @@ export default function AdminDashboard() {
     const { formatPrice } = useCurrencyStore();
     const [bookings, setBookings] = useState<any[]>([]);
     const [stats, setStats] = useState({ total: 0, confirmed: 0, pending: 0, revenue: 0 });
+    const [notifications, setNotifications] = useState<any[]>([]);
+    const [onlineUsers, setOnlineUsers] = useState<number>(0);
 
     useEffect(() => {
         fetchData();
+
+        // Set up real-time listeners for admin
+        if (socketService.isConnected()) {
+            socketService.onNewBooking((data) => {
+                setNotifications(prev => [...prev, {
+                    id: Date.now(),
+                    type: 'info',
+                    message: `New booking received: ${data.reservationNumber}`,
+                    timestamp: new Date()
+                }]);
+                fetchData(); // Refresh data
+            });
+
+            socketService.onBookingUpdate((data) => {
+                setNotifications(prev => [...prev, {
+                    id: Date.now(),
+                    type: 'info',
+                    message: `Booking ${data.reservationNumber} updated`,
+                    timestamp: new Date()
+                }]);
+            });
+
+            socketService.onPaymentUpdate((data) => {
+                setNotifications(prev => [...prev, {
+                    id: Date.now(),
+                    type: 'success',
+                    message: `Payment ${data.status} for ${data.bookingId}`,
+                    timestamp: new Date()
+                }]);
+            });
+
+            socketService.onUserConnected((data) => {
+                setOnlineUsers(prev => prev + 1);
+            });
+
+            socketService.onUserDisconnected((data) => {
+                setOnlineUsers(prev => Math.max(0, prev - 1));
+            });
+        }
     }, []);
+
+    const removeNotification = (id: number) => {
+        setNotifications(prev => prev.filter(n => n.id !== id));
+    };
 
     const fetchData = async () => {
         try {
@@ -122,6 +169,18 @@ export default function AdminDashboard() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Real-time Notifications */}
+            <div className="fixed top-4 right-4 z-50 space-y-2">
+                {notifications.slice(-5).map((notification) => (
+                    <Toast
+                        key={notification.id}
+                        type={notification.type}
+                        message={notification.message}
+                        onClose={() => removeNotification(notification.id)}
+                    />
+                ))}
             </div>
         </div>
     );

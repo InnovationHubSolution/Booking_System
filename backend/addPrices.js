@@ -280,7 +280,7 @@ async function showAllPrices() {
 // MAIN MENU
 // =======================
 async function main() {
-    console.log('🏝️  VANUATU BOOKING SYSTEM - PRICE MANAGER\n');
+    console.log('🏝️  VANUATU TRAVEL HUB - PRICE MANAGER\n');
     console.log('Choose an option:');
     console.log('1. Add new hotel with prices');
     console.log('2. Add new tour with price');

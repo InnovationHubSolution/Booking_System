@@ -211,7 +211,7 @@ router.put('/:id', auth, async (req: AuthRequest, res: Response) => {
         }
 
         // Check authorization
-        if (package_.createdBy.toString() !== req.user.userId && req.user.role !== 'admin') {
+        if (package_.createdBy && package_.createdBy.toString() !== req.user.userId && req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Not authorized to update this package' });
         }
 
@@ -240,7 +240,7 @@ router.delete('/:id', auth, async (req: AuthRequest, res: Response) => {
         }
 
         // Check authorization
-        if (package_.createdBy.toString() !== req.user.userId && req.user.role !== 'admin') {
+        if (package_.createdBy && package_.createdBy.toString() !== req.user.userId && req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Not authorized to delete this package' });
         }
 

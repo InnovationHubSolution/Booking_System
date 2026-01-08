@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: #0066cc;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .booking-details {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .booking-details p {
+            margin: 8px 0;
+        }
+
+        .booking-details strong {
+            color: #0066cc;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #0066cc;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .button:hover {
+            background: #0052a3;
+        }
+
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏝️ Booking Confirmed!</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{userName}},</p>
+            <p>Great news! Your booking has been confirmed.</p>
+
+            <div class="booking-details">
+                <p><strong>Reservation Number:</strong> {{reservationNumber}}</p>
+                <p><strong>Booking Type:</strong> {{bookingType}}</p>
+                <p><strong>Check-in Date:</strong> {{checkInDate}}</p>
+                <p><strong>Check-out Date:</strong> {{checkOutDate}}</p>
+                <p><strong>Total Amount:</strong> {{totalAmount}} {{currency}}</p>
+            </div>
+
+            <p>You can view your booking details and manage your reservation anytime:</p>
+            <center>
+                <a href="{{bookingUrl}}" class="button">View Booking Details</a>
+            </center>
+
+            <p>If you have any questions or need to make changes, please don't hesitate to contact us.</p>
+
+            <p>We look forward to serving you!</p>
+
+            <p>Best regards,<br>
+                <strong>Vanuatu Booking System Team</strong>
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{year}} Vanuatu Booking System. All rights reserved.</p>
+            <p><a href="{{frontendUrl}}">Visit our website</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

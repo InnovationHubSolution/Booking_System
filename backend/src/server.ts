@@ -2,6 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
+import http from 'http';
 import authRoutes from './routes/auth';
 import bookingRoutes from './routes/bookings';
 import serviceRoutes from './routes/services';
@@ -16,21 +18,70 @@ import resourceRoutes from './routes/resources';
 import paymentRoutes from './routes/payments';
 import advancedRoutes from './routes/advanced';
 import promotionRoutes from './routes/promotions';
+import auditRoutes from './routes/audit';
+import analyticsRoutes from './routes/analytics';
+import scenicToursRoutes from './routes/scenicTours';
+import backupRoutes from './routes/backup';
+import { auditContextMiddleware } from './middleware/audit';
+import { errorHandler, notFound, handleUncaughtException, handleUnhandledRejection } from './middleware/errorHandler';
+import { securityHeaders, sanitizeData, xssProtection, hppProtection, validateContentType, validateRequestSize } from './middleware/security';
+import { apiLimiter, authLimiter, searchLimiter, bookingLimiter } from './middleware/rateLimiter';
+import logger, { stream } from './config/logger';
+import { setupSwagger } from './config/swagger';
+import { setupSocket } from './config/socket';
+
+// Handle uncaught exceptions and rejections
+handleUncaughtException();
+handleUnhandledRejection();
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+const server = http.createServer(app);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/properties', propertyRoutes);
+// Setup Socket.io for real-time features
+const io = setupSocket(server);
+
+// Make io accessible to routes
+app.set('io', io);
+
+// Security middleware
+app.use(securityHeaders);
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true
+}));
+
+// Request logging
+app.use(morgan('combined', { stream }));
+
+// Body parsing with size limits
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Security middleware
+app.use(sanitizeData);
+app.use(xssProtection);
+app.use(hppProtection);
+app.use(validateContentType);
+app.use(validateRequestSize);
+
+// Apply general API rate limiter
+app.use('/api/', apiLimiter);
+
+// Apply audit context middleware to all routes (after authentication)
+app.use(auditContextMiddleware);
+
+// Routes with specific rate limiters
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/bookings', bookingLimiter, bookingRoutes);
+app.use('/api/services', searchLimiter, serviceRoutes);
+app.use('/api/properties', searchLimiter, propertyRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/wishlist', wishlistRoutes);
-app.use('/api/flights', flightRoutes);
+app.use('/api/flights', searchLimiter, flightRoutes);
 app.use('/api/car-rentals', carRentalRoutes);
 app.use('/api/transfers', transferRoutes);
 app.use('/api/packages', packageRoutes);
@@ -38,10 +89,46 @@ app.use('/api/resources', resourceRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/advanced', advancedRoutes);
 app.use('/api/promotions', promotionRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/scenic-tours', searchLimiter, scenicToursRoutes);
+app.use('/api/backup', backupRoutes);
 
+// Setup Swagger API documentation
+setupSwagger(app);
+
+// Health check endpoint
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', message: 'Vanuatu Booking System API' });
+    res.json({
+        status: 'OK',
+        message: 'Vanuatu Travel Hub API',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
 });
+
+// API documentation endpoint
+app.get('/api', (req, res) => {
+    res.json({
+        message: 'Vanuatu Booking System API',
+        version: '1.0.0',
+        documentation: '/api-docs',
+        endpoints: {
+            auth: '/api/auth',
+            bookings: '/api/bookings',
+            properties: '/api/properties',
+            flights: '/api/flights',
+            services: '/api/services',
+            payments: '/api/payments',
+            reviews: '/api/reviews'
+        }
+    });
+});
+
+// 404 handler - must be after all routes
+app.use(notFound);
+
+// Global error handler - must be last
+app.use(errorHandler);
 
 mongoose.connect(process.env.MONGODB_URI!)
     .then(() => {
@@ -2112,6 +2199,24 @@ async function seedDatabase() {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`✅ Vanuatu Booking System running on http://localhost:${PORT}`);
+
+server.listen(PORT, () => {
+    logger.info(`✅ Vanuatu Travel Hub running on http://localhost:${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(`API Documentation: http://localhost:${PORT}/api-docs`);
+    logger.info(`Real-time server ready on Socket.io`);
 });
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    logger.info('SIGTERM signal received: closing HTTP server');
+    server.close(() => {
+        logger.info('HTTP server closed');
+        mongoose.connection.close().then(() => {
+            logger.info('MongoDB connection closed');
+            process.exit(0);
+        });
+    });
+});
+
+export default app;

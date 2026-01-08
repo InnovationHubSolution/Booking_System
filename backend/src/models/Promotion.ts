@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IPromotion extends Document {
+export interface IPromotion extends Document, IAuditFields {
     code: string;
     name: string;
     description: string;
@@ -90,5 +92,10 @@ const PromotionSchema: Schema = new Schema({
 PromotionSchema.index({ code: 1 });
 PromotionSchema.index({ validFrom: 1, validUntil: 1, isActive: 1 });
 PromotionSchema.index({ applicableFor: 1 });
+
+// Apply audit plugin
+PromotionSchema.plugin(auditPlugin, {
+    fieldsToTrack: ['isActive', 'usageCount', 'discountValue']
+});
 
 export default mongoose.model<IPromotion>('Promotion', PromotionSchema);

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome to Vanuatu!</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{userName}},</p>
+            <p>Welcome to the Vanuatu Booking System! We're thrilled to have you join our community.</p>
+
+            <p>With your account, you can now:</p>
+
+            <div class="feature-box">
+                <strong>🏨 Book Accommodations</strong><br>
+                Choose from hotels, resorts, and vacation rentals across Vanuatu
+            </div>
+
+            <div class="feature-box">
+                <strong>✈️ Book Flights</strong><br>
+                Find and book domestic and international flights
+            </div>
+
+            <div class="feature-box">
+                <strong>🚗 Rent Vehicles</strong><br>
+                Rent cars and explore the islands at your own pace
+            </div>
+
+            <div class="feature-box">
+                <strong>🎯 Book Activities</strong><br>
+                Discover tours, activities, and experiences
+            </div>
+
+            <center>
+                <a href="{{loginUrl}}" class="button">Start Exploring</a>
+            </center>
+
+            <p>If you have any questions, our support team is here to help!</p>
+
+            <p>Happy travels!<br>
+                <strong>The Vanuatu Booking Team</strong>
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{year}} Vanuatu Booking System. All rights reserved.</p>
+            <p><a href="{{frontendUrl}}">Visit our website</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

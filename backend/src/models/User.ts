@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IUser extends Document {
+export interface IUser extends Document, IAuditFields {
     email: string;
     password: string;
     firstName: string;
@@ -17,6 +19,13 @@ export interface IUser extends Document {
     };
     isHost: boolean;
     verified: boolean;
+    verificationToken?: string;
+    verificationTokenExpiry?: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpiry?: Date;
+    lastLogin?: Date;
+    loginAttempts?: number;
+    lockUntil?: Date;
     savedPaymentMethods?: {
         type: 'card' | 'paypal' | 'mobile';
         lastFour?: string;
@@ -85,6 +94,13 @@ const UserSchema: Schema = new Schema({
     },
     isHost: { type: Boolean, default: false },
     verified: { type: Boolean, default: false },
+    verificationToken: { type: String },
+    verificationTokenExpiry: { type: Date },
+    resetPasswordToken: { type: String },
+    resetPasswordExpiry: { type: Date },
+    lastLogin: { type: Date },
+    loginAttempts: { type: Number, default: 0 },
+    lockUntil: { type: Date },
     savedPaymentMethods: [{
         type: { type: String, enum: ['card', 'paypal', 'mobile'] },
         lastFour: { type: String },
@@ -144,6 +160,18 @@ const UserSchema: Schema = new Schema({
         viewedAt: { type: Date, default: Date.now }
     }],
     createdAt: { type: Date, default: Date.now }
+});
+
+// Apply audit plugin to track all changes
+UserSchema.plugin(auditPlugin, {
+    fieldsToTrack: [
+        'email',
+        'role',
+        'verified',
+        'isHost',
+        'loyaltyProgram.tier',
+        'loyaltyProgram.points'
+    ]
 });
 
 export default mongoose.model<IUser>('User', UserSchema);

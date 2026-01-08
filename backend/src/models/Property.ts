@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IProperty extends Document {
+export interface IProperty extends Document, IAuditFields {
     name: string;
     description: string;
     propertyType: 'hotel' | 'apartment' | 'resort' | 'villa' | 'hostel' | 'guesthouse' | 'bed-and-breakfast' | 'motel' | 'boutique-hotel';
@@ -200,5 +202,17 @@ const PropertySchema: Schema = new Schema({
 
 PropertySchema.index({ 'address.coordinates': '2dsphere' });
 PropertySchema.index({ name: 'text', description: 'text' });
+
+// Apply audit plugin to track all changes
+PropertySchema.plugin(auditPlugin, {
+    fieldsToTrack: [
+        'name',
+        'isActive',
+        'featured',
+        'rooms',
+        'pricing.taxRate',
+        'cancellationPolicy.type'
+    ]
+});
 
 export default mongoose.model<IProperty>('Property', PropertySchema);

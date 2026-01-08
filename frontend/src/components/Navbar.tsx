@@ -18,21 +18,96 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4">
                 <div className="flex justify-between items-center h-16">
                     <Link to="/" className="text-2xl font-bold text-white flex items-center gap-2">
-                        🌴 Vanuatu Bookings
+                        🌴 Vanuatu Travel Hub
                     </Link>
 
                     <div className="hidden md:flex items-center space-x-6">
-                        <Link to="/properties" className="text-white hover:text-vanuatu-yellow transition">
-                            Properties
-                        </Link>
-                        <Link to="/services" className="text-white hover:text-vanuatu-yellow transition">
-                            Experiences
-                        </Link>
-                        <Link 
-                            to="/map" 
+                        {/* Accommodations Dropdown */}
+                        <div className="relative group">
+                            <button className="text-white hover:text-vanuatu-yellow transition flex items-center gap-1">
+                                🏠 Stay
+                                <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <Link to="/properties" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🏨 All Properties
+                                </Link>
+                                <Link to="/properties?type=hotel" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🏨 Hotels
+                                </Link>
+                                <Link to="/properties?type=resort" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🏖️ Resorts
+                                </Link>
+                                <Link to="/properties?type=villa" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🏡 Villas
+                                </Link>
+                                <Link to="/properties?type=bungalow" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🛖 Bungalows
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Experiences Dropdown */}
+                        <div className="relative group">
+                            <button className="text-white hover:text-vanuatu-yellow transition flex items-center gap-1">
+                                🌟 Experiences
+                                <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <Link to="/services" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🎯 All Experiences
+                                </Link>
+                                <Link to="/scenic-tours" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    ✈️ Scenic Tours
+                                </Link>
+                                <Link to="/services?category=adventure" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🏄 Adventure
+                                </Link>
+                                <Link to="/services?category=cultural" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🗿 Cultural Tours
+                                </Link>
+                                <Link to="/services?category=diving" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🤿 Diving
+                                </Link>
+                                <Link to="/services?category=nature" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🌺 Nature
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Travel Services Dropdown */}
+                        <div className="relative group">
+                            <button className="text-white hover:text-vanuatu-yellow transition flex items-center gap-1">
+                                ✈️ Travel
+                                <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <Link to="/flights" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    ✈️ Flights
+                                </Link>
+                                <Link to="/packages" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    📦 Travel Packages
+                                </Link>
+                                <Link to="/transfers" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🚐 Airport Transfers
+                                </Link>
+                                <Link to="/car-rental" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    🚗 Car Rental
+                                </Link>
+                            </div>
+                        </div>
+
+                        <Link
+                            to="/map"
                             className="text-white hover:text-vanuatu-yellow transition font-semibold bg-blue-500/30 px-3 py-1.5 rounded-lg hover:bg-blue-500/50"
                         >
-                            🗺️ Map
+                            🗺️ Explore Map
                         </Link>
 
                         {token ? (
@@ -73,14 +148,35 @@ export default function Navbar() {
                                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                                                 onClick={() => setShowMenu(false)}
                                             >
-                                                My Bookings
+                                                📋 My Bookings
                                             </Link>
                                             <Link
                                                 to="/wishlist"
                                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                                                 onClick={() => setShowMenu(false)}
                                             >
-                                                Wishlist
+                                                ❤️ Wishlist
+                                            </Link>
+                                            <Link
+                                                to="/profile"
+                                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                onClick={() => setShowMenu(false)}
+                                            >
+                                                👤 Profile Settings
+                                            </Link>
+                                            <Link
+                                                to="/payment-methods"
+                                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                onClick={() => setShowMenu(false)}
+                                            >
+                                                💳 Payment Methods
+                                            </Link>
+                                            <Link
+                                                to="/check-in"
+                                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                onClick={() => setShowMenu(false)}
+                                            >
+                                                📱 Quick Check-in
                                             </Link>
                                             <button
                                                 onClick={handleLogout}
@@ -108,7 +204,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile menu button */}
-                    <button 
+                    <button
                         onClick={() => setShowMobileMenu(!showMobileMenu)}
                         className="md:hidden text-white"
                     >
@@ -121,46 +217,67 @@ export default function Navbar() {
                 {/* Mobile Menu */}
                 {showMobileMenu && (
                     <div className="md:hidden bg-vanuatu-blue border-t border-blue-600 py-4">
-                        <Link 
-                            to="/properties" 
+                        <Link
+                            to="/properties"
                             className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                             onClick={() => setShowMobileMenu(false)}
                         >
                             Properties
                         </Link>
-                        <Link 
-                            to="/services" 
+                        <Link
+                            to="/services"
                             className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                             onClick={() => setShowMobileMenu(false)}
                         >
-                            Experiences
+                            🌟 Experiences
                         </Link>
-                        <Link 
-                            to="/map" 
+                        <Link
+                            to="/scenic-tours"
+                            className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                            onClick={() => setShowMobileMenu(false)}
+                        >
+                            ✈️ Scenic Tours
+                        </Link>
+                        <Link
+                            to="/flights"
+                            className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                            onClick={() => setShowMobileMenu(false)}
+                        >
+                            ✈️ Flights
+                        </Link>
+                        <Link
+                            to="/packages"
+                            className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
+                            onClick={() => setShowMobileMenu(false)}
+                        >
+                            📦 Packages
+                        </Link>
+                        <Link
+                            to="/map"
                             className="block text-white hover:text-vanuatu-yellow transition px-4 py-2 font-semibold bg-blue-500/20 rounded"
                             onClick={() => setShowMobileMenu(false)}
                         >
-                            🗺️ Map
+                            🗺️ Explore Map
                         </Link>
                         {token ? (
                             <>
-                                <Link 
-                                    to="/wishlist" 
+                                <Link
+                                    to="/wishlist"
                                     className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                                     onClick={() => setShowMobileMenu(false)}
                                 >
                                     ❤️ Wishlist
                                 </Link>
-                                <Link 
-                                    to="/my-bookings" 
+                                <Link
+                                    to="/my-bookings"
                                     className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                                     onClick={() => setShowMobileMenu(false)}
                                 >
                                     My Trips
                                 </Link>
                                 {(user?.role === 'host' || user?.isHost) && (
-                                    <Link 
-                                        to="/host/dashboard" 
+                                    <Link
+                                        to="/host/dashboard"
                                         className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                                         onClick={() => setShowMobileMenu(false)}
                                     >
@@ -168,8 +285,8 @@ export default function Navbar() {
                                     </Link>
                                 )}
                                 {user?.role === 'admin' && (
-                                    <Link 
-                                        to="/admin" 
+                                    <Link
+                                        to="/admin"
                                         className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                                         onClick={() => setShowMobileMenu(false)}
                                     >
@@ -188,15 +305,15 @@ export default function Navbar() {
                             </>
                         ) : (
                             <>
-                                <Link 
-                                    to="/login" 
+                                <Link
+                                    to="/login"
                                     className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                                     onClick={() => setShowMobileMenu(false)}
                                 >
                                     Login
                                 </Link>
-                                <Link 
-                                    to="/register" 
+                                <Link
+                                    to="/register"
                                     className="block text-white hover:text-vanuatu-yellow transition px-4 py-2"
                                     onClick={() => setShowMobileMenu(false)}
                                 >

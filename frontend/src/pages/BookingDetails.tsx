@@ -156,7 +156,7 @@ const BookingDetailsPage = () => {
                         <div>
                             <p className="text-sm opacity-90">Booking Date & Time</p>
                             <p className="text-lg font-semibold">
-                                {format(new Date(booking.bookingDate), 'PPP p')}
+                                {booking.bookingDate ? format(new Date(booking.bookingDate), 'PPP p') : 'N/A'}
                             </p>
                         </div>
                         <div>
@@ -175,14 +175,14 @@ const BookingDetailsPage = () => {
                         <div>
                             <p className="text-sm text-gray-600 mb-1">Check-In</p>
                             <p className="text-lg font-semibold text-gray-800">
-                                {format(new Date(booking.checkInDate), 'PPP')}
+                                {booking.checkInDate ? format(new Date(booking.checkInDate), 'PPP') : 'Not set'}
                             </p>
                             <p className="text-sm text-gray-500">After 2:00 PM</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-600 mb-1">Check-Out</p>
                             <p className="text-lg font-semibold text-gray-800">
-                                {format(new Date(booking.checkOutDate), 'PPP')}
+                                {booking.checkOutDate ? format(new Date(booking.checkOutDate), 'PPP') : 'Not set'}
                             </p>
                             <p className="text-sm text-gray-500">Before 11:00 AM</p>
                         </div>
@@ -258,8 +258,8 @@ const BookingDetailsPage = () => {
                         <div className="flex justify-between items-center py-3 border-b">
                             <span className="text-gray-600">Payment Status</span>
                             <span className={`px-3 py-1 rounded-full text-sm font-semibold ${booking.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
-                                    booking.paymentStatus === 'refunded' ? 'bg-blue-100 text-blue-800' :
-                                        'bg-yellow-100 text-yellow-800'
+                                booking.paymentStatus === 'refunded' ? 'bg-blue-100 text-blue-800' :
+                                    'bg-yellow-100 text-yellow-800'
                                 }`}>
                                 {booking.paymentStatus.toUpperCase()}
                             </span>
@@ -288,13 +288,13 @@ const BookingDetailsPage = () => {
                         <div className="flex justify-between items-center">
                             <span className="text-gray-600">Created</span>
                             <span className="font-semibold text-gray-800">
-                                {format(new Date(booking.createdAt), 'PPP p')}
+                                {booking.createdAt ? format(new Date(booking.createdAt), 'PPP p') : 'N/A'}
                             </span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-gray-600">Last Updated</span>
                             <span className="font-semibold text-gray-800">
-                                {format(new Date(booking.updatedAt), 'PPP p')}
+                                {booking.updatedAt ? format(new Date(booking.updatedAt), 'PPP p') : 'N/A'}
                             </span>
                         </div>
                     </div>

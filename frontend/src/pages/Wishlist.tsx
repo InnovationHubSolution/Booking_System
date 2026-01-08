@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from '../api/axios';
+import api from '../api/axios';
+import { LoadingState, FriendlyErrorMessage, Toast, ConfirmationDialog } from '../components/PremiumUX';
 
 interface Property {
     _id: string;
@@ -20,6 +21,13 @@ interface Property {
 export default function Wishlist() {
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [removeDialog, setRemoveDialog] = useState({ show: false, propertyId: '', propertyName: '' });
+    const [notification, setNotification] = useState<{ show: boolean; type: 'success' | 'error'; message: string }>({
+        show: false,
+        type: 'success',
+        message: ''
+    });
 
     useEffect(() => {
         fetchWishlist();
@@ -27,28 +35,41 @@ export default function Wishlist() {
 
     const fetchWishlist = async () => {
         try {
-            const response = await axios.get('/wishlist');
-            setProperties(response.data.properties);
-        } catch (error) {
-            console.error('Error fetching wishlist:', error);
+            setError(null);
+            const response = await api.get('/wishlist');
+            setProperties(response.data);
+        } catch (error: any) {
+            setError(error.response?.data?.message || error.message || 'Failed to load wishlist');
         } finally {
             setLoading(false);
         }
     };
 
-    const removeFromWishlist = async (propertyId: string) => {
+    const removeFromWishlist = async () => {
         try {
-            await axios.delete(`/wishlist/remove/${propertyId}`);
-            setProperties(properties.filter(p => p._id !== propertyId));
-        } catch (error) {
-            console.error('Error removing from wishlist:', error);
+            await api.delete(`/wishlist/remove/${removeDialog.propertyId}`);
+            setProperties(properties.filter(p => p._id !== removeDialog.propertyId));
+            setNotification({ show: true, type: 'success', message: 'Property removed from wishlist' });
+            setRemoveDialog({ show: false, propertyId: '', propertyName: '' });
+        } catch (error: any) {
+            setNotification({ show: true, type: 'error', message: 'Failed to remove from wishlist' });
         }
     };
 
-    if (loading) {
+    const clearNotification = () => {
+        setNotification({ show: false, type: 'success', message: '' });
+    };
+
+    if (loading) return <LoadingState message="Loading your wishlist..." />;
+
+    if (error) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vanuatu-blue"></div>
+            <div className="max-w-4xl mx-auto px-4 py-12">
+                <FriendlyErrorMessage
+                    error={error}
+                    onRetry={fetchWishlist}
+                    onClose={() => setError(null)}
+                />
             </div>
         );
     }
@@ -102,7 +123,7 @@ export default function Wishlist() {
                                         <span className="text-gray-600 text-sm"> /night</span>
                                     </div>
                                     <button
-                                        onClick={() => removeFromWishlist(property._id)}
+                                        onClick={() => setRemoveDialog({ show: true, propertyId: property._id, propertyName: property.name })}
                                         className="text-red-500 hover:text-red-700"
                                     >
                                         Remove
@@ -112,6 +133,29 @@ export default function Wishlist() {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* Remove Confirmation Dialog */}
+            {removeDialog.show && (
+                <ConfirmationDialog
+                    icon="💔"
+                    title="Remove from Wishlist"
+                    message={`Remove ${removeDialog.propertyName} from your wishlist?`}
+                    confirmText="Remove"
+                    cancelText="Keep"
+                    confirmColor="red"
+                    onConfirm={removeFromWishlist}
+                    onCancel={() => setRemoveDialog({ show: false, propertyId: '', propertyName: '' })}
+                />
+            )}
+
+            {/* Notification Toast */}
+            {notification.show && (
+                <Toast
+                    type={notification.type}
+                    message={notification.message}
+                    onClose={clearNotification}
+                />
             )}
         </div>
     );

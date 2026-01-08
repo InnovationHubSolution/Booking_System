@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAuditFields, IAuditDocument } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IBooking extends Document {
+export interface IBooking extends Document, IAuditFields, IAuditDocument {
     // Booking/Reservation Details (Core)
     reservationNumber: string; // Unique booking reference (e.g., VU-2025-001234)
     bookingDate: Date; // When the booking was made
@@ -43,7 +45,7 @@ export interface IBooking extends Document {
     };
     payment: {
         status: 'unpaid' | 'partial' | 'paid' | 'refunded' | 'failed';
-        method?: 'cash' | 'card' | 'mobile' | 'transfer' | 'paypal' | 'stripe';
+        method?: 'cash' | 'credit-card' | 'debit-card' | 'mobile-money' | 'bank-transfer' | 'paypal' | 'stripe' | 'western-union' | 'money-gram' | 'travelex' | 'eftpos' | 'american-express' | 'diners-club' | 'alipay' | 'wechat-pay' | 'unionpay' | 'crypto';
         reference?: string; // Payment reference/receipt number
         transactionId?: string; // External transaction ID
         paidAmount: number; // Amount paid so far
@@ -324,7 +326,25 @@ const BookingSchema: Schema = new Schema({
         },
         method: {
             type: String,
-            enum: ['cash', 'card', 'mobile', 'transfer', 'paypal', 'stripe']
+            enum: [
+                'cash',
+                'credit-card',
+                'debit-card',
+                'mobile-money',
+                'bank-transfer',
+                'paypal',
+                'stripe',
+                'western-union',
+                'money-gram',
+                'travelex',
+                'eftpos',
+                'american-express',
+                'diners-club',
+                'alipay',
+                'wechat-pay',
+                'unionpay',
+                'crypto'
+            ]
         },
         reference: {
             type: String,
@@ -354,8 +374,10 @@ const BookingSchema: Schema = new Schema({
         refundedAt: Date,
         paymentDetails: {
             cardLastFour: String,
-            cardBrand: String,
-            mobileProvider: String,
+            cardBrand: String, // Visa, Mastercard, Amex, etc.
+            mobileProvider: String, // Digicel, Vodafone, etc.
+            cryptoCurrency: String, // BTC, ETH, USDT, etc.
+            walletAddress: String, // For crypto or digital wallets
             accountNumber: String
         }
     },
@@ -611,5 +633,20 @@ BookingSchema.index({ 'checkOut.checkedOutAt': 1 });
 BookingSchema.index({ 'termsAndConditions.accepted': 1 });
 BookingSchema.index({ 'geolocation.pickup.coordinates': '2dsphere' });
 BookingSchema.index({ 'geolocation.dropoff.coordinates': '2dsphere' });
+
+// Apply audit plugin to track all changes with versioning enabled
+BookingSchema.plugin(auditPlugin, {
+    fieldsToTrack: [
+        'status',
+        'pricing.totalAmount',
+        'payment.status',
+        'payment.paidAmount',
+        'checkIn.status',
+        'checkOut.status',
+        'resourceAllocation.availabilityStatus',
+        'cancellationReason'
+    ],
+    enableVersioning: true  // Enable data versioning for bookings
+});
 
 export default mongoose.model<IBooking>('Booking', BookingSchema);

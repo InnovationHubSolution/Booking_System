@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IFlight extends Document {
+export interface IFlight extends Document, IAuditFields {
     flightNumber: string;
     airline: {
         code: string;
@@ -230,5 +232,10 @@ const FlightSchema = new Schema({
 FlightSchema.index({ 'departure.airport.code': 1, 'arrival.airport.code': 1, 'departure.dateTime': 1 });
 FlightSchema.index({ 'airline.code': 1 });
 FlightSchema.index({ isInternational: 1, isActive: 1 });
+
+// Apply audit plugin
+FlightSchema.plugin(auditPlugin, {
+    fieldsToTrack: ['status', 'classes', 'isActive']
+});
 
 export default mongoose.model<IFlight>('Flight', FlightSchema);

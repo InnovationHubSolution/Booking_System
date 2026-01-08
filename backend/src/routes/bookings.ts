@@ -8,6 +8,62 @@ import paymentService from '../services/paymentService';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/bookings/property:
+ *   post:
+ *     summary: Create a property booking
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - propertyId
+ *               - roomType
+ *               - checkInDate
+ *               - checkOutDate
+ *               - guestCount
+ *               - guestDetails
+ *             properties:
+ *               propertyId:
+ *                 type: string
+ *               roomType:
+ *                 type: string
+ *               checkInDate:
+ *                 type: string
+ *                 format: date
+ *               checkOutDate:
+ *                 type: string
+ *                 format: date
+ *               guestCount:
+ *                 type: number
+ *               guestDetails:
+ *                 type: object
+ *               specialRequests:
+ *                 type: string
+ *               discountCode:
+ *                 type: string
+ *               currency:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Booking created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Booking'
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Property not found
+ *       500:
+ *         description: Server error
+ */
 // Create booking for property
 router.post('/property', auth, async (req: AuthRequest, res: Response) => {
     try {
@@ -25,8 +81,8 @@ router.post('/property', auth, async (req: AuthRequest, res: Response) => {
 
         // Validate guest details
         if (!guestDetails || !guestDetails.firstName || !guestDetails.lastName || !guestDetails.email || !guestDetails.phone) {
-            return res.status(400).json({ 
-                message: 'Guest details are incomplete. Please provide first name, last name, email, and phone number.' 
+            return res.status(400).json({
+                message: 'Guest details are incomplete. Please provide first name, last name, email, and phone number.'
             });
         }
 
@@ -167,8 +223,8 @@ router.post('/service', auth, async (req: AuthRequest, res: Response) => {
 
         // Validate guest details
         if (!guestDetails || !guestDetails.firstName || !guestDetails.lastName || !guestDetails.email || !guestDetails.phone) {
-            return res.status(400).json({ 
-                message: 'Guest details are incomplete. Please provide first name, last name, email, and phone number.' 
+            return res.status(400).json({
+                message: 'Guest details are incomplete. Please provide first name, last name, email, and phone number.'
             });
         }
 

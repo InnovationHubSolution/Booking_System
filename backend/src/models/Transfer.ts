@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface ITransfer extends Document {
+export interface ITransfer extends Document, IAuditFields {
     name: string;
     description: string;
     provider: {
@@ -158,5 +160,10 @@ const TransferSchema = new Schema({
 TransferSchema.index({ type: 1, isActive: 1 });
 TransferSchema.index({ 'route.from.coordinates': '2dsphere' });
 TransferSchema.index({ 'route.to.coordinates': '2dsphere' });
+
+// Apply audit plugin
+TransferSchema.plugin(auditPlugin, {
+    fieldsToTrack: ['pricing.basePrice', 'isActive', 'vehicleOptions']
+});
 
 export default mongoose.model<ITransfer>('Transfer', TransferSchema);

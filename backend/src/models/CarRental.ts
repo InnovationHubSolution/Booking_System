@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface ICarRental extends Document {
+export interface ICarRental extends Document, IAuditFields {
     company: {
         name: string;
         logo: string;
@@ -194,5 +196,10 @@ const CarRentalSchema = new Schema({
 CarRentalSchema.index({ 'vehicle.category': 1, 'pricing.dailyRate': 1 });
 CarRentalSchema.index({ 'location.pickupLocations.coordinates': '2dsphere' });
 CarRentalSchema.index({ isActive: 1 });
+
+// Apply audit plugin
+CarRentalSchema.plugin(auditPlugin, {
+    fieldsToTrack: ['pricing.dailyRate', 'available', 'isActive']
+});
 
 export default mongoose.model<ICarRental>('CarRental', CarRentalSchema);

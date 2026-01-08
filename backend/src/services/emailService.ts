@@ -27,7 +27,7 @@ class EmailService {
     async sendEmail(options: EmailOptions): Promise<boolean> {
         try {
             await this.transporter.sendMail({
-                from: `"Vanuatu Booking System" <${process.env.EMAIL_USER}>`,
+                from: `"Vanuatu Travel Hub" <${process.env.EMAIL_USER}>`,
                 to: options.to,
                 subject: options.subject,
                 html: options.html,
@@ -116,8 +116,8 @@ class EmailService {
                     
                     <div class="footer">
                         <p>This is an automated message. Please do not reply to this email.</p>
-                        <p>If you have any questions, please contact us at support@vanuatubooking.com</p>
-                        <p>&copy; 2025 Vanuatu Booking System. All rights reserved.</p>
+                        <p>If you have any questions, please contact us at support@vanuatutravelhub.com</p>
+                        <p>&copy; 2025 Vanuatu Travel Hub. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -177,8 +177,8 @@ class EmailService {
                     </div>
                     
                     <div class="footer">
-                        <p>If you have any questions, please contact us at support@vanuatubooking.com</p>
-                        <p>&copy; 2025 Vanuatu Booking System. All rights reserved.</p>
+                        <p>If you have any questions, please contact us at support@vanuatutravelhub.com</p>
+                        <p>&copy; 2025 Vanuatu Travel Hub. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -260,8 +260,8 @@ class EmailService {
                     </div>
                     
                     <div class="footer">
-                        <p>If you have any questions about this payment, please contact us at support@vanuatubooking.com</p>
-                        <p>&copy; 2025 Vanuatu Booking System. All rights reserved.</p>
+                        <p>If you have any questions about this payment, please contact us at support@vanuatutravelhub.com</p>
+                        <p>&copy; 2025 Vanuatu Travel Hub. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -297,7 +297,7 @@ class EmailService {
                         <h1>Password Reset Request</h1>
                     </div>
                     <div class="content">
-                        <p>You requested to reset your password for your Vanuatu Booking System account.</p>
+                        <p>You requested to reset your password for your Vanuatu Travel Hub account.</p>
                         <p>Click the button below to reset your password. This link will expire in 1 hour.</p>
                         
                         <center>
@@ -313,7 +313,7 @@ class EmailService {
                     </div>
                     
                     <div class="footer">
-                        <p>&copy; 2025 Vanuatu Booking System. All rights reserved.</p>
+                        <p>&copy; 2025 Vanuatu Travel Hub. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -322,7 +322,7 @@ class EmailService {
 
         return this.sendEmail({
             to,
-            subject: 'Password Reset Request - Vanuatu Booking System',
+            subject: 'Password Reset Request - Vanuatu Travel Hub',
             html
         });
     }
@@ -346,11 +346,11 @@ class EmailService {
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Welcome to Vanuatu Booking System!</h1>
+                        <h1>Welcome to Vanuatu Travel Hub!</h1>
                     </div>
                     <div class="content">
                         <h2>Hello ${userName}!</h2>
-                        <p>Thank you for joining Vanuatu Booking System. We're excited to help you discover and book amazing experiences in Vanuatu!</p>
+                        <p>Thank you for joining Vanuatu Travel Hub. We're excited to help you discover and book amazing experiences in Vanuatu!</p>
                         
                         <div class="features">
                             <h3>What you can do:</h3>
@@ -368,12 +368,12 @@ class EmailService {
 
                         <p style="margin-top: 30px;">
                             <strong>Need help?</strong><br>
-                            Visit our help center or contact our support team at support@vanuatubooking.com
+                            Visit our help center or contact our support team at support@vanuatutravelhub.com
                         </p>
                     </div>
                     
                     <div class="footer">
-                        <p>&copy; 2025 Vanuatu Booking System. All rights reserved.</p>
+                        <p>&copy; 2025 Vanuatu Travel Hub. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -382,7 +382,7 @@ class EmailService {
 
         return this.sendEmail({
             to,
-            subject: 'Welcome to Vanuatu Booking System!',
+            subject: 'Welcome to Vanuatu Travel Hub!',
             html
         });
     }

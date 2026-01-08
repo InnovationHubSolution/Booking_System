@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAuditFields } from '../types/audit';
+import { auditPlugin } from '../middleware/audit';
 
-export interface IReview extends Document {
+export interface IReview extends Document, IAuditFields {
     propertyId: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
     bookingId: mongoose.Types.ObjectId;
@@ -71,5 +73,15 @@ const ReviewSchema: Schema = new Schema({
 });
 
 ReviewSchema.index({ propertyId: 1, createdAt: -1 });
+
+// Apply audit plugin to track all changes
+ReviewSchema.plugin(auditPlugin, {
+    fieldsToTrack: [
+        'rating',
+        'comment',
+        'flagged',
+        'response.text'
+    ]
+});
 
 export default mongoose.model<IReview>('Review', ReviewSchema);
