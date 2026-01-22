@@ -530,36 +530,89 @@ export const getPaymentReport = async (
 /**
  * Validate discount code
  */
-export const validateDiscountCode = async (code: string, bookingType: string): Promise<{
+export const validateDiscountCode = async (
+    code: string,
+    bookingType: string,
+    userId?: string,
+    amount?: number
+): Promise<{
     valid: boolean;
     discount?: DiscountConfig;
     message?: string;
 }> => {
-    // This is a placeholder. In a real system, you'd check against a discounts/coupons database
-    // For now, we'll implement some simple logic
+    try {
+        const Discount = (await import('../models/Discount')).default;
 
-    const discountCodes: { [key: string]: DiscountConfig } = {
-        'WELCOME10': { type: 'percentage', value: 10, code: 'WELCOME10', reason: 'Welcome discount' },
-        'VANUATU20': { type: 'percentage', value: 20, code: 'VANUATU20', reason: 'Vanuatu special' },
-        'SUMMER2025': { type: 'percentage', value: 15, code: 'SUMMER2025', reason: 'Summer promotion' },
-        'FIRSTBOOKING': { type: 'fixed', value: 5000, code: 'FIRSTBOOKING', reason: 'First booking bonus' },
-        'VIP50': { type: 'fixed', value: 50000, code: 'VIP50', reason: 'VIP customer discount' }
-    };
+        // Find the discount by code
+        const discount = await Discount.findOne({
+            code: code.toUpperCase(),
+            isActive: true
+        });
 
-    const discount = discountCodes[code.toUpperCase()];
+        if (!discount) {
+            return {
+                valid: false,
+                message: 'Invalid or expired discount code'
+            };
+        }
 
-    if (!discount) {
+        // Check if discount is valid (date range, max uses, etc.)
+        if (!discount.isValid()) {
+            return {
+                valid: false,
+                message: 'This discount code has expired or reached maximum uses'
+            };
+        }
+
+        // Check if discount is applicable to this booking category
+        if (discount.applicableCategories && discount.applicableCategories.length > 0) {
+            const isApplicable = discount.applicableCategories.includes('all') ||
+                discount.applicableCategories.includes(bookingType);
+            if (!isApplicable) {
+                return {
+                    valid: false,
+                    message: `This discount is not applicable to ${bookingType} bookings`
+                };
+            }
+        }
+
+        // Check minimum purchase amount
+        if (amount && discount.minPurchaseAmount && amount < discount.minPurchaseAmount) {
+            return {
+                valid: false,
+                message: `Minimum purchase amount of ${discount.minPurchaseAmount} VUV required`
+            };
+        }
+
+        // Check if user can use this discount
+        if (userId) {
+            const canUse = await discount.canUserUse(userId);
+            if (!canUse) {
+                return {
+                    valid: false,
+                    message: 'You are not eligible to use this discount code'
+                };
+            }
+        }
+
+        // Return valid discount
+        return {
+            valid: true,
+            discount: {
+                type: discount.type,
+                value: discount.value,
+                code: discount.code,
+                reason: discount.description
+            },
+            message: 'Discount code applied successfully'
+        };
+    } catch (error) {
+        console.error('Error validating discount code:', error);
         return {
             valid: false,
-            message: 'Invalid discount code'
+            message: 'Error validating discount code'
         };
     }
-
-    return {
-        valid: true,
-        discount,
-        message: 'Discount code applied successfully'
-    };
 };
 
 export default {

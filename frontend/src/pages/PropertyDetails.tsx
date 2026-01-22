@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
+import api from '../api/axios';
 import { useAuthStore } from '../store/authStore';
 import Map from '../components/Map';
 import { useCurrencyStore } from '../store/currencyStore';
@@ -87,10 +87,11 @@ export default function PropertyDetails() {
 
     const fetchProperty = async () => {
         try {
-            const response = await axios.get(`/properties/${id}`);
-            setProperty(response.data);
-            if (response.data.rooms.length > 0) {
-                setSelectedRoom(response.data.rooms[0].type);
+            const response = await api.get(`/properties/${id}`);
+            const propertyData = response.data?.property || response.data;
+            setProperty(propertyData);
+            if (propertyData?.rooms?.length > 0) {
+                setSelectedRoom(propertyData.rooms[0].type);
             }
         } catch (error) {
             console.error('Error fetching property:', error);

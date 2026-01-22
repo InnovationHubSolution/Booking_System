@@ -20,3 +20,14 @@ export const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
         res.status(401).json({ message: 'Invalid token' });
     }
 };
+
+// Middleware to check if user is admin
+export const isAdmin = (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({
+            success: false,
+            message: 'Access denied. Admin privileges required.'
+        });
+    }
+    next();
+};

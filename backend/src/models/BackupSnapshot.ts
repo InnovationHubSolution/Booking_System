@@ -164,8 +164,7 @@ const BackupSnapshotSchema: Schema = new Schema({
     },
     startedAt: {
         type: Date,
-        required: true,
-        index: true
+        required: true
     },
     completedAt: {
         type: Date
@@ -175,8 +174,7 @@ const BackupSnapshotSchema: Schema = new Schema({
     },
     verified: {
         type: Boolean,
-        default: false,
-        index: true
+        default: false
     },
     verifiedAt: {
         type: Date

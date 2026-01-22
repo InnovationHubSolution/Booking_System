@@ -38,9 +38,15 @@ export default function PaymentMethodsPage() {
     const fetchPaymentMethods = async () => {
         try {
             const response = await api.get('/users/payment-methods');
-            setPaymentMethods(response.data);
+            const methodsData = Array.isArray(response.data) ? response.data : response.data?.paymentMethods || [];
+            setPaymentMethods(methodsData);
         } catch (error: any) {
-            setError(error.response?.data?.message || 'Failed to load payment methods');
+            // If the endpoint doesn't exist, just show empty state instead of error
+            if (error.response?.status === 404) {
+                setPaymentMethods([]);
+            } else {
+                setError(error.response?.data?.message || 'Failed to load payment methods');
+            }
         } finally {
             setLoading(false);
         }

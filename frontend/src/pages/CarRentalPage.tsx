@@ -15,6 +15,7 @@ interface CarRental {
     luggage: number;
     fuelType: 'petrol' | 'diesel' | 'hybrid';
     pricePerDay: number;
+    deposit: number;
     currency: string;
     features: string[];
     images: string[];
@@ -23,6 +24,12 @@ interface CarRental {
         rating: number;
         reviews: number;
         location: string;
+        phone?: string;
+        email?: string;
+        website?: string;
+        address?: string;
+        openingHours?: string;
+        logo?: string;
     };
     availability: boolean;
     pickupLocations: string[];
@@ -57,8 +64,42 @@ export default function CarRentalPage() {
                 if (value) params.append(key, value);
             });
 
-            const response = await api.get(`/car-rental?${params.toString()}`);
-            setCars(response.data);
+            const response = await api.get(`/car-rentals/search?${params.toString()}`);
+            const carsData = Array.isArray(response.data) ? response.data : [];
+
+            // Transform backend data structure to frontend format
+            const transformedCars = carsData.map((car: any) => ({
+                id: car._id || car.id,
+                make: car.vehicle?.make || '',
+                model: car.vehicle?.model || '',
+                year: car.vehicle?.year || 2023,
+                type: car.vehicle?.category || 'sedan',
+                transmission: car.vehicle?.transmission || 'automatic',
+                seats: car.vehicle?.seats || 5,
+                luggage: car.vehicle?.luggage || 2,
+                fuelType: car.vehicle?.fuelType || 'petrol',
+                pricePerDay: car.pricing?.dailyRate || 0,
+                deposit: car.pricing?.deposit || 0,
+                currency: car.pricing?.currency || 'VUV',
+                features: car.features || [],
+                images: car.images || [],
+                provider: {
+                    name: car.company?.name || 'Car Rental Provider',
+                    rating: car.company?.rating || car.rating || 0,
+                    reviews: car.company?.reviewCount || car.reviewCount || 0,
+                    location: car.location?.pickupLocations?.[0]?.name || 'Port Vila',
+                    phone: car.company?.phone,
+                    email: car.company?.email,
+                    website: car.company?.website,
+                    address: car.location?.pickupLocations?.[0]?.address,
+                    openingHours: car.location?.pickupLocations?.[0]?.openingHours,
+                    logo: car.company?.logo
+                },
+                availability: car.available > 0,
+                pickupLocations: car.location?.pickupLocations?.map((loc: any) => loc.name) || []
+            }));
+
+            setCars(transformedCars);
         } catch (error: any) {
             setError(error.response?.data?.message || 'Failed to load car rentals');
         } finally {
@@ -96,14 +137,20 @@ export default function CarRentalPage() {
             luggage: 3,
             fuelType: 'petrol',
             pricePerDay: 5500,
+            deposit: 15000,
             currency: 'VUV',
             features: ['Air Conditioning', 'GPS Navigation', 'Bluetooth', 'USB Charging'],
-            images: ['/api/placeholder/400/300'],
+            images: ['https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&h=300&fit=crop'],
             provider: {
                 name: 'Vanuatu Car Rental',
                 rating: 4.7,
                 reviews: 134,
-                location: 'Port Vila'
+                location: 'Port Vila',
+                phone: '+678 22345',
+                email: 'info@vanuatucarrental.com',
+                website: 'www.vanuatucarrental.com',
+                address: 'Port Vila Airport Terminal',
+                openingHours: '7:00 AM - 8:00 PM'
             },
             availability: true,
             pickupLocations: ['Port Vila Airport', 'Port Vila Downtown', 'Hotel Pickup']
@@ -119,14 +166,20 @@ export default function CarRentalPage() {
             luggage: 5,
             fuelType: 'diesel',
             pricePerDay: 8500,
+            deposit: 25000,
             currency: 'VUV',
             features: ['4WD', 'Air Conditioning', 'GPS Navigation', 'Roof Rack', 'Tow Bar'],
-            images: ['/api/placeholder/400/300'],
+            images: ['https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400&h=300&fit=crop'],
             provider: {
                 name: 'Island 4WD Rentals',
                 rating: 4.9,
                 reviews: 89,
-                location: 'Port Vila'
+                location: 'Port Vila',
+                phone: '+678 23456',
+                email: 'bookings@island4wd.vu',
+                website: 'www.island4wd.vu',
+                address: 'Lini Highway, Port Vila',
+                openingHours: '8:00 AM - 6:00 PM'
             },
             availability: true,
             pickupLocations: ['Port Vila Airport', 'Luganville Airport', 'Hotel Pickup']
@@ -144,7 +197,7 @@ export default function CarRentalPage() {
             pricePerDay: 4200,
             currency: 'VUV',
             features: ['Air Conditioning', 'Bluetooth', 'Fuel Efficient'],
-            images: ['/api/placeholder/400/300'],
+            images: ['https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400&h=300&fit=crop'],
             provider: {
                 name: 'Budget Cars Vanuatu',
                 rating: 4.5,
@@ -311,17 +364,50 @@ export default function CarRentalPage() {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center space-x-4">
-                                        <div className="flex items-center space-x-2">
-                                            <span className="font-medium text-gray-900">{car.provider.name}</span>
-                                            <div className="flex items-center">
-                                                <span className="text-yellow-500">⭐</span>
-                                                <span className="text-sm text-gray-600 ml-1">
-                                                    {car.provider.rating} ({car.provider.reviews})
-                                                </span>
+                                    {/* Rental Company Information */}
+                                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                                        <div className="flex items-start justify-between mb-2">
+                                            <div>
+                                                <h5 className="font-semibold text-gray-900 mb-1">🚗 Rental Company</h5>
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="font-medium text-blue-600">{car.provider.name}</span>
+                                                    <div className="flex items-center">
+                                                        <span className="text-yellow-500">⭐</span>
+                                                        <span className="text-sm text-gray-600 ml-1">
+                                                            {car.provider.rating.toFixed(1)} ({car.provider.reviews} reviews)
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <span className="text-sm text-gray-600">📍 {car.provider.location}</span>
+                                        <div className="space-y-1 text-sm text-gray-600">
+                                            <div className="flex items-center">
+                                                <span className="w-5">📍</span>
+                                                <span>{car.provider.address || car.provider.location}</span>
+                                            </div>
+                                            {car.provider.phone && (
+                                                <div className="flex items-center">
+                                                    <span className="w-5">📞</span>
+                                                    <a href={`tel:${car.provider.phone}`} className="hover:text-blue-600">
+                                                        {car.provider.phone}
+                                                    </a>
+                                                </div>
+                                            )}
+                                            {car.provider.email && (
+                                                <div className="flex items-center">
+                                                    <span className="w-5">📧</span>
+                                                    <a href={`mailto:${car.provider.email}`} className="hover:text-blue-600">
+                                                        {car.provider.email}
+                                                    </a>
+                                                </div>
+                                            )}
+                                            {car.provider.openingHours && (
+                                                <div className="flex items-center">
+                                                    <span className="w-5">🕒</span>
+                                                    <span>{car.provider.openingHours}</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -330,7 +416,13 @@ export default function CarRentalPage() {
                                         <div className="text-3xl font-bold text-blue-600 mb-1">
                                             {car.pricePerDay.toLocaleString()} {car.currency}
                                         </div>
-                                        <div className="text-sm text-gray-600 mb-4">per day</div>
+                                        <div className="text-sm text-gray-600 mb-2">per day</div>
+                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-4">
+                                            <div className="text-xs text-gray-500">Security Deposit</div>
+                                            <div className="text-lg font-semibold text-gray-900">
+                                                {car.deposit.toLocaleString()} {car.currency}
+                                            </div>
+                                        </div>
 
                                         {car.availability ? (
                                             <div className="text-green-600 font-medium mb-4">✅ Available</div>

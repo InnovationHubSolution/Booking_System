@@ -44,11 +44,16 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
 
     return (
         <div className={`payment-method-selector ${className}`}>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Select Payment Method
-            </h3>
+            <div className="mb-6">
+                <h3 className="section-header text-2xl md:text-3xl">
+                    💳 Select Payment Method
+                </h3>
+                <p className="section-subheader text-gray-600 mt-2">
+                    Choose your preferred payment option for a seamless booking experience
+                </p>
+            </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 {paymentMethods.map((method) => {
                     const processingFee = calculateProcessingFee(amount, method.value);
                     const totalWithFee = amount + processingFee;
@@ -58,20 +63,16 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
                     return (
                         <div
                             key={method.value}
-                            className={`
-                                border-2 rounded-lg p-4 cursor-pointer transition-all
-                                ${isSelected
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                                }
-                            `}
+                            className={`payment-method-card ${isSelected ? 'selected' : ''}`}
                             onClick={() => handleMethodClick(method)}
                         >
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                    <span className="text-2xl">{method.icon}</span>
-                                    <div>
-                                        <h4 className="font-medium text-gray-900">
+                                <div className="flex items-center space-x-4 flex-1">
+                                    <div className="payment-icon">
+                                        {method.icon}
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="font-semibold text-lg text-pacific-deep mb-1">
                                             {method.label}
                                         </h4>
                                         <p className="text-sm text-gray-600">
@@ -80,82 +81,95 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
                                     </div>
                                 </div>
 
-                                {(method.processingFee || 0) > 0 && (
-                                    <div className="text-right">
-                                        <p className="text-sm text-gray-600">
-                                            +{method.processingFee}% fee
-                                        </p>
-                                        <p className="text-xs text-gray-500">
-                                            {formatPrice(processingFee)}
-                                        </p>
-                                    </div>
-                                )}
+                                <div className="flex items-center gap-4">
+                                    {(method.processingFee || 0) > 0 && (
+                                        <div className="text-right bg-gray-50 px-3 py-2 rounded-lg">
+                                            <p className="text-xs text-gray-500 font-medium">
+                                                Processing Fee
+                                            </p>
+                                            <p className="text-sm font-semibold text-coral">
+                                                +{method.processingFee}%
+                                            </p>
+                                            <p className="text-xs text-gray-600">
+                                                {formatPrice(processingFee)}
+                                            </p>
+                                        </div>
+                                    )}
 
-                                <div className="ml-4">
-                                    <input
-                                        type="radio"
-                                        checked={isSelected}
-                                        onChange={() => onSelectMethod(method.value)}
-                                        className="h-4 w-4 text-blue-600"
-                                    />
+                                    <div className="ml-2">
+                                        <input
+                                            type="radio"
+                                            checked={isSelected}
+                                            onChange={() => onSelectMethod(method.value)}
+                                            className="h-5 w-5 text-pacific-blue focus:ring-pacific-blue cursor-pointer"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
                             {isExpanded && (
-                                <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <div className="space-y-2 text-sm">
+                                <div className="mt-5 pt-5 border-t-2 border-pacific-light/20 bg-gradient-to-br from-pacific-light/5 to-transparent rounded-lg p-4">
+                                    <div className="space-y-3 text-sm">
                                         {method.currency && (
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Accepted currencies:</span>
-                                                <span className="font-medium text-gray-900">
+                                            <div className="flex justify-between items-center p-2 bg-white/60 rounded-lg">
+                                                <span className="text-gray-700 font-medium flex items-center gap-2">
+                                                    💱 Accepted currencies:
+                                                </span>
+                                                <span className="font-semibold text-pacific-deep">
                                                     {method.currency.join(', ')}
                                                 </span>
                                             </div>
                                         )}
 
                                         {method.minAmount && (
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Minimum amount:</span>
-                                                <span className="font-medium text-gray-900">
+                                            <div className="flex justify-between items-center p-2 bg-white/60 rounded-lg">
+                                                <span className="text-gray-700 font-medium flex items-center gap-2">
+                                                    ⬇️ Minimum amount:
+                                                </span>
+                                                <span className="font-semibold text-gray-900">
                                                     {formatPrice(method.minAmount)}
                                                 </span>
                                             </div>
                                         )}
 
                                         {method.maxAmount && (
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Maximum amount:</span>
-                                                <span className="font-medium text-gray-900">
+                                            <div className="flex justify-between items-center p-2 bg-white/60 rounded-lg">
+                                                <span className="text-gray-700 font-medium flex items-center gap-2">
+                                                    ⬆️ Maximum amount:
+                                                </span>
+                                                <span className="font-semibold text-gray-900">
                                                     {formatPrice(method.maxAmount)}
                                                 </span>
                                             </div>
                                         )}
 
                                         {showProcessingFee && (
-                                            <>
-                                                <div className="flex justify-between pt-2 border-t border-gray-100">
-                                                    <span className="text-gray-600">Subtotal:</span>
-                                                    <span className="font-medium text-gray-900">
-                                                        {formatPrice(amount)}
-                                                    </span>
-                                                </div>
-
-                                                {processingFee > 0 && (
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">Processing fee:</span>
-                                                        <span className="text-gray-900">
-                                                            {formatPrice(processingFee)}
+                                            <div className="mt-4 pt-4 border-t-2 border-pacific-turquoise/20">
+                                                <div className="space-y-3">
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-gray-700">Subtotal:</span>
+                                                        <span className="font-semibold text-gray-900 text-base">
+                                                            {formatPrice(amount)}
                                                         </span>
                                                     </div>
-                                                )}
 
-                                                <div className="flex justify-between pt-2 border-t border-gray-200">
-                                                    <span className="font-semibold text-gray-900">Total:</span>
-                                                    <span className="font-bold text-blue-600">
-                                                        {formatPrice(totalWithFee)}
-                                                    </span>
+                                                    {processingFee > 0 && (
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="text-gray-700">Processing fee:</span>
+                                                            <span className="text-coral font-medium">
+                                                                {formatPrice(processingFee)}
+                                                            </span>
+                                                        </div>
+                                                    )}
+
+                                                    <div className="flex justify-between items-center pt-3 border-t-2 border-pacific-deep/10 bg-gradient-to-r from-pacific-turquoise/10 to-pacific-blue/10 p-3 rounded-lg">
+                                                        <span className="font-bold text-pacific-deep text-lg">Total:</span>
+                                                        <span className="price-display text-pacific-blue">
+                                                            {formatPrice(totalWithFee)}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -166,9 +180,13 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
             </div>
 
             {paymentMethods.length === 0 && (
-                <div className="text-center py-8">
-                    <p className="text-gray-500">
+                <div className="glass-card text-center py-12 rounded-pacific">
+                    <div className="text-6xl mb-4">💳</div>
+                    <p className="text-gray-600 text-lg font-medium">
                         No payment methods available for {currentCurrency}
+                    </p>
+                    <p className="text-gray-500 text-sm mt-2">
+                        Please select a different currency or contact support
                     </p>
                 </div>
             )}

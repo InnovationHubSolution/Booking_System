@@ -30,8 +30,10 @@ export default function Services() {
             try {
                 setError(null);
                 const response = await api.get('/services');
-                setServices(response.data);
+                const servicesData = Array.isArray(response.data) ? response.data : response.data?.services || [];
+                setServices(servicesData);
             } catch (error: any) {
+                console.error('Services fetch error:', error);
                 setError(error.response?.data?.message || error.message || 'Failed to load services');
             } finally {
                 setLoading(false);

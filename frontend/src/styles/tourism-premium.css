@@ -1,0 +1,630 @@
+/**
+ * Tourism Premium Styles
+ * Professional, attractive CSS for Vanuatu Travel Hub
+ * Optimized for tourism and travel booking experiences
+ */
+
+/* ============================================
+   GLASSMORPHISM EFFECTS
+   Modern, premium glass-like effects
+   ============================================ */
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(10, 74, 107, 0.1);
+}
+
+.glass-card-dark {
+    background: rgba(10, 74, 107, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-nav {
+    background: rgba(10, 74, 107, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   GRADIENT OVERLAYS
+   Tropical-inspired gradients
+   ============================================ */
+
+.gradient-ocean-overlay {
+    background: linear-gradient(135deg,
+            rgba(0, 169, 157, 0.8) 0%,
+            rgba(27, 127, 168, 0.9) 50%,
+            rgba(10, 74, 107, 0.95) 100%);
+}
+
+.gradient-sunset-overlay {
+    background: linear-gradient(135deg,
+            rgba(244, 168, 66, 0.9) 0%,
+            rgba(255, 107, 74, 0.9) 50%,
+            rgba(232, 93, 117, 0.95) 100%);
+}
+
+.gradient-paradise {
+    background: linear-gradient(135deg,
+            #00A99D 0%,
+            #1B7FA8 35%,
+            #4FA8CE 70%,
+            #87CEEB 100%);
+}
+
+.gradient-tropical {
+    background: linear-gradient(135deg,
+            #FF6B4A 0%,
+            #F4A842 50%,
+            #E85D75 100%);
+}
+
+/* ============================================
+   CARD STYLES
+   Premium card designs for properties and services
+   ============================================ */
+
+.tourism-card {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(10, 74, 107, 0.08);
+}
+
+.tourism-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(10, 74, 107, 0.2);
+}
+
+.tourism-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #00A99D, #4FA8CE, #F4A842);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.tourism-card:hover::before {
+    transform: scaleX(1);
+}
+
+.featured-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 250, 250, 0.98));
+    box-shadow: 0 10px 40px rgba(10, 74, 107, 0.15);
+}
+
+.featured-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 70%);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+}
+
+.featured-card:hover::after {
+    left: 100%;
+}
+
+/* ============================================
+   PAYMENT METHOD STYLES
+   Professional payment selection interface
+   ============================================ */
+
+.payment-method-selector {
+    max-width: 100%;
+}
+
+.payment-method-card {
+    position: relative;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.payment-method-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(27, 127, 168, 0.05), rgba(0, 169, 157, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.payment-method-card:hover::before {
+    opacity: 1;
+}
+
+.payment-method-card:hover {
+    border-color: #4FA8CE;
+    transform: translateX(4px);
+    box-shadow: 0 8px 24px rgba(10, 74, 107, 0.12);
+}
+
+.payment-method-card.selected {
+    background: linear-gradient(135deg,
+            rgba(79, 168, 206, 0.08) 0%,
+            rgba(0, 169, 157, 0.08) 100%);
+    border-color: #1B7FA8;
+    border-width: 3px;
+    box-shadow: 0 12px 32px rgba(27, 127, 168, 0.2);
+}
+
+.payment-method-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #1B7FA8, #00A99D);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(27, 127, 168, 0.3);
+}
+
+.payment-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.payment-method-card:hover .payment-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+/* ============================================
+   BUTTON STYLES
+   Premium call-to-action buttons
+   ============================================ */
+
+.btn-primary-tourism {
+    position: relative;
+    background: linear-gradient(135deg, #1B7FA8 0%, #00A99D 100%);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(27, 127, 168, 0.3);
+}
+
+.btn-primary-tourism::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary-tourism:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary-tourism:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(27, 127, 168, 0.4);
+}
+
+.btn-secondary-tourism {
+    background: white;
+    color: #1B7FA8;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 2px solid #1B7FA8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-tourism:hover {
+    background: #1B7FA8;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(27, 127, 168, 0.3);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, #F4A842 0%, #FF6B4A 100%);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(244, 168, 66, 0.3);
+}
+
+.btn-accent:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 32px rgba(244, 168, 66, 0.4);
+}
+
+/* ============================================
+   SECTION HEADERS
+   Attractive section titles
+   ============================================ */
+
+.section-header {
+    position: relative;
+    display: inline-block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0A4A6B;
+    margin-bottom: 1.5rem;
+}
+
+.section-header::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(90deg, #F4A842, #00A99D);
+    border-radius: 2px;
+}
+
+.section-subheader {
+    font-size: 1.125rem;
+    color: #6B7280;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* ============================================
+   IMAGE OVERLAYS
+   Beautiful image treatments
+   ============================================ */
+
+.image-overlay-gradient {
+    position: relative;
+}
+
+.image-overlay-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+            rgba(10, 74, 107, 0.8) 0%,
+            rgba(10, 74, 107, 0.4) 40%,
+            transparent 70%);
+    pointer-events: none;
+}
+
+.image-zoom {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-zoom:hover {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   BADGES AND TAGS
+   ============================================ */
+
+.badge-featured {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: linear-gradient(135deg, #F4A842, #FF6B4A);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(244, 168, 66, 0.4);
+    z-index: 10;
+}
+
+.badge-rating {
+    background: white;
+    color: #0A4A6B;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tag-category {
+    background: rgba(27, 127, 168, 0.1);
+    color: #1B7FA8;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.tag-category:hover {
+    background: #1B7FA8;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.shimmer-loader {
+    background: linear-gradient(90deg,
+            #f0f0f0 25%,
+            #e8e8e8 50%,
+            #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.pulse-loader {
+    animation: pulse-scale 2s ease-in-out infinite;
+}
+
+@keyframes pulse-scale {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+/* ============================================
+   PRICE DISPLAY
+   Professional price formatting
+   ============================================ */
+
+.price-display {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0A4A6B;
+    line-height: 1;
+}
+
+.price-display-large {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #0A4A6B, #00A99D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+}
+
+.price-currency {
+    font-size: 0.6em;
+    opacity: 0.8;
+    margin-right: 2px;
+}
+
+.price-period {
+    font-size: 0.5em;
+    color: #6B7280;
+    font-weight: 400;
+}
+
+.price-savings {
+    color: #10B981;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* ============================================
+   TESTIMONIAL CARDS
+   ============================================ */
+
+.testimonial-card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(10, 74, 107, 0.1);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 4rem;
+    color: rgba(27, 127, 168, 0.1);
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(10, 74, 107, 0.15);
+}
+
+/* ============================================
+   STATS DISPLAY
+   ============================================ */
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 250, 250, 1));
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(10, 74, 107, 0.08);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(10, 74, 107, 0.15);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1B7FA8, #00A99D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.stat-label {
+    color: #6B7280;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 768px) {
+    .section-header {
+        font-size: 2rem;
+    }
+
+    .price-display-large {
+        font-size: 2rem;
+    }
+
+    .tourism-card:hover {
+        transform: translateY(-4px) scale(1.01);
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+.focus-ring:focus {
+    outline: 3px solid #4FA8CE;
+    outline-offset: 2px;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #0A4A6B;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR (Webkit browsers)
+   ============================================ */
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F5F5F5;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1B7FA8, #00A99D);
+    border-radius: 10px;
+    border: 2px solid #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0A4A6B, #1B7FA8);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .tourism-card,
+    .featured-card {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb;
+    }
+}

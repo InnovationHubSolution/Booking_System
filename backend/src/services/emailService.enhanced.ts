@@ -15,14 +15,18 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Verify connection
-transporter.verify((error, success) => {
-    if (error) {
-        logError('Email service connection failed', error);
-    } else {
-        logInfo('Email service ready');
-    }
-});
+// Verify connection (only in production)
+if (process.env.NODE_ENV === 'production') {
+    transporter.verify((error, success) => {
+        if (error) {
+            logError('Email service connection failed', error);
+        } else {
+            logInfo('Email service ready');
+        }
+    });
+} else {
+    logInfo('Email service initialized (development mode - verification skipped)');
+}
 
 // Load and compile email templates
 const loadTemplate = (templateName: string): handlebars.TemplateDelegate => {

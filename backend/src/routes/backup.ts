@@ -28,7 +28,7 @@ router.get('/cars/:carId', async (req, res) => {
                 pricePerDay: 4800,
                 currency: 'VUV',
                 features: ['Air Conditioning', 'Bluetooth', 'Fuel Efficient'],
-                images: ['/api/placeholder/400/300'],
+                images: ['https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&h=300&fit=crop'],
                 provider: {
                     name: 'Budget Cars Vanuatu',
                     rating: 4.5,
@@ -51,7 +51,7 @@ router.get('/cars/:carId', async (req, res) => {
                 pricePerDay: 4200,
                 currency: 'VUV',
                 features: ['Air Conditioning', 'Radio', 'Economical'],
-                images: ['/api/placeholder/400/300'],
+                images: ['https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400&h=300&fit=crop'],
                 provider: {
                     name: 'Economy Car Hire',
                     rating: 4.2,
@@ -74,7 +74,7 @@ router.get('/cars/:carId', async (req, res) => {
                 pricePerDay: 6500,
                 currency: 'VUV',
                 features: ['Air Conditioning', 'GPS Navigation', 'Bluetooth', 'All-wheel Drive'],
-                images: ['/api/placeholder/400/300'],
+                images: ['https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400&h=300&fit=crop'],
                 provider: {
                     name: 'Premium Car Rental',
                     rating: 4.8,

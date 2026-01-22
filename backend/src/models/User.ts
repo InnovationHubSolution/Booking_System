@@ -18,6 +18,7 @@ export interface IUser extends Document, IAuditFields {
         zipCode: string;
     };
     isHost: boolean;
+    isActive: boolean;
     verified: boolean;
     verificationToken?: string;
     verificationTokenExpiry?: Date;
@@ -93,6 +94,7 @@ const UserSchema: Schema = new Schema({
         zipCode: { type: String }
     },
     isHost: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     verified: { type: Boolean, default: false },
     verificationToken: { type: String },
     verificationTokenExpiry: { type: Date },

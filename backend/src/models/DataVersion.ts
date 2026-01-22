@@ -133,8 +133,7 @@ const DataVersionSchema: Schema = new Schema({
     },
     backupSnapshotId: {
         type: Schema.Types.ObjectId,
-        ref: 'BackupSnapshot',
-        index: true
+        ref: 'BackupSnapshot'
     },
     restoredFrom: {
         type: Schema.Types.ObjectId,

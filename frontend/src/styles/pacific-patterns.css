@@ -1,0 +1,338 @@
+/**
+ * Pacific Patterns Library
+ * 
+ * Lightweight CSS and SVG patterns inspired by Melanesian and Polynesian designs.
+ * Optimized for low-bandwidth and offline-first applications.
+ * 
+ * Cultural inspirations documented in PACIFIC_DESIGN_SYSTEM.md
+ */
+
+/* ============================================
+   PATTERN 1: NAMELE (CYCAD LEAF)
+   Inspiration: Symmetrical palm fronds, V-shapes
+   Usage: Card borders, section dividers
+   ============================================ */
+
+.pattern-namele {
+    background-image:
+        linear-gradient(45deg, var(--pattern-color, #B8956A) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--pattern-color, #B8956A) 25%, transparent 25%);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 0;
+    opacity: var(--pattern-opacity, 0.3);
+}
+
+.pattern-namele-border {
+    border-image: repeating-linear-gradient(90deg,
+            var(--pattern-color, #B8956A) 0px,
+            var(--pattern-color, #B8956A) 10px,
+            transparent 10px,
+            transparent 20px,
+            var(--pattern-color, #B8956A) 20px,
+            var(--pattern-color, #B8956A) 25px,
+            transparent 25px,
+            transparent 30px) 1;
+    border-width: 0 0 3px 0;
+    border-style: solid;
+}
+
+/* SVG version for more control */
+.pattern-namele-svg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0 L0 30 L15 15 L30 30 Z M45 0 L30 30 L45 15 L60 30 Z' fill='%23B8956A' fill-opacity='0.3'/%3E%3C/svg%3E");
+    background-size: 60px 30px;
+}
+
+/* ============================================
+   PATTERN 2: KASTOM MAT (WOVEN PANDANUS)
+   Inspiration: Traditional mat weaving, diagonal cross-hatch
+   Usage: Subtle backgrounds, page textures
+   ============================================ */
+
+.pattern-kastom-mat {
+    background-image:
+        linear-gradient(45deg, transparent 48%, var(--pattern-color, #B8956A) 48%, var(--pattern-color, #B8956A) 52%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, var(--pattern-color, #B8956A) 48%, var(--pattern-color, #B8956A) 52%, transparent 52%);
+    background-size: 20px 20px;
+    opacity: var(--pattern-opacity, 0.08);
+}
+
+.pattern-kastom-mat-dense {
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, var(--pattern-color, #6B4423) 10px, var(--pattern-color, #6B4423) 11px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, var(--pattern-color, #6B4423) 10px, var(--pattern-color, #6B4423) 11px);
+    opacity: var(--pattern-opacity, 0.1);
+}
+
+/* ============================================
+   PATTERN 3: NAKAMAL CIRCLE (GATHERING PLACE)
+   Inspiration: Concentric circles, unity, community
+   Usage: Button accents, loading indicators
+   ============================================ */
+
+.pattern-nakamal {
+    background-image:
+        radial-gradient(circle at 25% 25%, transparent 10px, var(--pattern-color, #1B7FA8) 10px, var(--pattern-color, #1B7FA8) 11px, transparent 11px),
+        radial-gradient(circle at 75% 75%, transparent 10px, var(--pattern-color, #1B7FA8) 10px, var(--pattern-color, #1B7FA8) 11px, transparent 11px);
+    background-size: 50px 50px;
+    opacity: var(--pattern-opacity, 0.2);
+}
+
+.pattern-nakamal-dots {
+    background-image: radial-gradient(circle, var(--pattern-color, #0A4A6B) 2px, transparent 2px);
+    background-size: 25px 25px;
+    opacity: var(--pattern-opacity, 0.15);
+}
+
+/* Animated version for loading */
+@keyframes nakamal-pulse {
+
+    0%,
+    100% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
+
+.pattern-nakamal-animated {
+    animation: nakamal-pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   PATTERN 4: REEF PATTERN (CORAL FORMATIONS)
+   Inspiration: Geometric coral, hexagons, organic growth
+   Usage: Card backgrounds, section accents
+   ============================================ */
+
+.pattern-reef {
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L55 14 L55 34 L40 48 L25 34 L25 14 Z' fill='none' stroke='%2300A99D' stroke-width='1' opacity='0.2'/%3E%3Cpath d='M0 40 L14 25 L34 25 L48 40 L34 55 L14 55 Z' fill='none' stroke='%2300A99D' stroke-width='1' opacity='0.2'/%3E%3C/svg%3E");
+    background-size: 80px 80px;
+}
+
+.pattern-reef-dense {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L30 10 L30 20 L20 30 L10 20 L10 10 Z' fill='none' stroke='%234FA8CE' stroke-width='1' opacity='0.25'/%3E%3C/svg%3E");
+    background-size: 40px 40px;
+}
+
+/* ============================================
+   PATTERN 5: WAVE PATTERN (PACIFIC OCEAN)
+   Inspiration: Ocean waves, flowing curves, voyaging
+   Usage: Headers, footers, navigation
+   ============================================ */
+
+.pattern-wave {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q25 0 50 10 T100 10' stroke='%231B7FA8' stroke-width='2' fill='none' opacity='0.3'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 100px 20px;
+}
+
+.pattern-wave-footer {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 Q25 5 50 15 T100 15' stroke='%234FA8CE' stroke-width='2' fill='none' opacity='0.4'/%3E%3Cpath d='M0 20 Q25 10 50 20 T100 20' stroke='%231B7FA8' stroke-width='2' fill='none' opacity='0.3'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 100px 30px;
+    background-position: bottom;
+}
+
+.pattern-wave-double {
+    background-image:
+        url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q25 0 50 10 T100 10' stroke='%231B7FA8' stroke-width='2' fill='none' opacity='0.2'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15 Q25 5 50 15 T100 15' stroke='%234FA8CE' stroke-width='2' fill='none' opacity='0.15'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 100px 20px;
+    background-position: top, bottom;
+}
+
+/* ============================================
+   PATTERN 6: VOLCANIC STONE (TEXTURE)
+   Inspiration: Rough volcanic rock, strength, endurance
+   Usage: Subtle overlays, hero sections
+   ============================================ */
+
+.pattern-volcanic {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='15' r='1.5' fill='%232C2C2C' opacity='0.08'/%3E%3Ccircle cx='35' cy='8' r='1' fill='%232C2C2C' opacity='0.06'/%3E%3Ccircle cx='22' cy='35' r='1.2' fill='%234A4A4A' opacity='0.07'/%3E%3Ccircle cx='58' cy='25' r='1.3' fill='%232C2C2C' opacity='0.08'/%3E%3Ccircle cx='75' cy='45' r='1' fill='%234A4A4A' opacity='0.06'/%3E%3Ccircle cx='42' cy='62' r='1.5' fill='%232C2C2C' opacity='0.07'/%3E%3Ccircle cx='68' cy='78' r='1.2' fill='%232C2C2C' opacity='0.08'/%3E%3Ccircle cx='15' cy='85' r='1' fill='%234A4A4A' opacity='0.06'/%3E%3Ccircle cx='88' cy='12' r='1.3' fill='%232C2C2C' opacity='0.07'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Pattern opacity modifiers */
+.pattern-opacity-5 {
+    --pattern-opacity: 0.05;
+}
+
+.pattern-opacity-10 {
+    --pattern-opacity: 0.1;
+}
+
+.pattern-opacity-15 {
+    --pattern-opacity: 0.15;
+}
+
+.pattern-opacity-20 {
+    --pattern-opacity: 0.2;
+}
+
+.pattern-opacity-30 {
+    --pattern-opacity: 0.3;
+}
+
+.pattern-opacity-40 {
+    --pattern-opacity: 0.4;
+}
+
+.pattern-opacity-50 {
+    --pattern-opacity: 0.5;
+}
+
+/* Pattern color modifiers */
+.pattern-color-ocean {
+    --pattern-color: #1B7FA8;
+}
+
+.pattern-color-earth {
+    --pattern-color: #6B4423;
+}
+
+.pattern-color-pandanus {
+    --pattern-color: #B8956A;
+}
+
+.pattern-color-volcanic {
+    --pattern-color: #2C2C2C;
+}
+
+.pattern-color-coral {
+    --pattern-color: #FF6B4A;
+}
+
+.pattern-color-turquoise {
+    --pattern-color: #00A99D;
+}
+
+/* Combined pattern utilities */
+.pattern-header {
+    position: relative;
+}
+
+.pattern-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q25 0 50 10 T100 10' stroke='%234FA8CE' stroke-width='2' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: bottom;
+    background-size: 100px 20px;
+    pointer-events: none;
+}
+
+.pattern-card {
+    position: relative;
+}
+
+.pattern-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L30 10 L30 20 L20 30 L10 20 L10 10 Z' fill='none' stroke='%234FA8CE' stroke-width='1' opacity='0.08'/%3E%3C/svg%3E");
+    background-size: 40px 40px;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+/* Divider patterns */
+.pattern-divider-namele {
+    height: 3px;
+    background-image: repeating-linear-gradient(90deg,
+            #B8956A 0px,
+            #B8956A 10px,
+            transparent 10px,
+            transparent 20px,
+            #B8956A 20px,
+            #B8956A 25px,
+            transparent 25px,
+            transparent 30px);
+    opacity: 0.4;
+}
+
+.pattern-divider-wave {
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q25 0 50 10 T100 10' stroke='%231B7FA8' stroke-width='2' fill='none' opacity='0.5'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 100px 20px;
+}
+
+/* ============================================
+   RESPONSIVE PATTERNS (Mobile-First)
+   ============================================ */
+
+@media (max-width: 640px) {
+
+    /* Reduce pattern density on mobile */
+    .pattern-kastom-mat {
+        background-size: 30px 30px;
+        opacity: 0.05;
+    }
+
+    .pattern-reef,
+    .pattern-reef-dense {
+        background-size: 60px 60px;
+    }
+
+    .pattern-volcanic {
+        opacity: 0.5;
+        /* Reduce overall texture */
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .pattern-nakamal-animated {
+        animation: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+
+    /* Remove decorative patterns in high contrast mode */
+    .pattern-kastom-mat,
+    .pattern-volcanic,
+    .pattern-nakamal-dots {
+        background-image: none;
+    }
+
+    /* Keep functional patterns but increase contrast */
+    .pattern-namele-border {
+        border-color: currentColor;
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATION
+   ============================================ */
+
+/* Use CSS containment for pattern elements */
+.pattern-card,
+.pattern-header {
+    contain: layout style paint;
+}
+
+/* Will-change for animated patterns */
+.pattern-nakamal-animated {
+    will-change: opacity, transform;
+}

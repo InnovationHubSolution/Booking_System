@@ -37,7 +37,9 @@ export default function Wishlist() {
         try {
             setError(null);
             const response = await api.get('/wishlist');
-            setProperties(response.data);
+            // The API returns { userId, properties: [...] }, extract the properties array
+            const propertiesData = response.data.properties || [];
+            setProperties(Array.isArray(propertiesData) ? propertiesData : []);
         } catch (error: any) {
             setError(error.response?.data?.message || error.message || 'Failed to load wishlist');
         } finally {

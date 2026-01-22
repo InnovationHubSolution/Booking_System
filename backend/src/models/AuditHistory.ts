@@ -39,7 +39,6 @@ const AuditHistorySchema: Schema = new Schema({
         type: Date,
         default: Date.now,
         required: true,
-        index: true,
         immutable: true  // Cannot be changed
     },
     ipAddress: {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import axios from '../api/axios';
+import api from '../api/axios';
 import Map from '../components/Map';
 import { useCurrencyStore } from '../store/currencyStore';
 
@@ -67,8 +67,9 @@ export default function PropertySearch() {
             if (filters.sortBy) params.append('sortBy', filters.sortBy);
             params.append('limit', '20');
 
-            const response = await axios.get(`/properties/search?${params.toString()}`);
-            setProperties(response.data.properties || response.data);
+            const response = await api.get(`/properties/search?${params.toString()}`);
+            const propertiesData = response.data?.properties || response.data || [];
+            setProperties(Array.isArray(propertiesData) ? propertiesData : []);
         } catch (error) {
             console.error('Error searching properties:', error);
             setProperties([]);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import Map from '../components/Map';
 import { useCurrencyStore } from '../store/currencyStore';
 import CurrencySelector from '../components/CurrencySelector';
@@ -60,12 +60,15 @@ const Packages = () => {
     const fetchPackages = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/packages/search', {
+            const response = await api.get('/packages/search', {
                 params: filters
             });
-            setPackages(response.data.packages || []);
+            const packagesData = Array.isArray(response.data) ? response.data : response.data?.packages || [];
+            setPackages(packagesData);
         } catch (error) {
             console.error('Error fetching packages:', error);
+            // Set empty array on error so UI doesn't break
+            setPackages([]);
         }
         setLoading(false);
     };

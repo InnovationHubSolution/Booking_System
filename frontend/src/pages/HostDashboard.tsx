@@ -56,10 +56,21 @@ export default function HostDashboard() {
                 axios.get('/properties/host/my-properties'),
                 axios.get('/bookings/host/bookings')
             ]);
-            setProperties(propertiesRes.data);
-            setBookings(bookingsRes.data);
+
+            // Handle different response formats
+            const propertiesData = Array.isArray(propertiesRes.data)
+                ? propertiesRes.data
+                : propertiesRes.data.properties || [];
+            const bookingsData = Array.isArray(bookingsRes.data)
+                ? bookingsRes.data
+                : bookingsRes.data.bookings || [];
+
+            setProperties(propertiesData);
+            setBookings(bookingsData);
         } catch (error) {
             console.error('Error fetching host data:', error);
+            setProperties([]);
+            setBookings([]);
         } finally {
             setLoading(false);
         }
@@ -75,14 +86,14 @@ export default function HostDashboard() {
     };
 
     const stats = {
-        totalProperties: properties.length,
-        activeProperties: properties.filter(p => p.isActive).length,
-        totalBookings: bookings.length,
-        pendingBookings: bookings.filter(b => b.status === 'pending').length,
-        confirmedBookings: bookings.filter(b => b.status === 'confirmed').length,
-        totalRevenue: bookings
-            .filter(b => b.status !== 'cancelled')
-            .reduce((sum, b) => sum + b.totalPrice, 0)
+        totalProperties: Array.isArray(properties) ? properties.length : 0,
+        activeProperties: Array.isArray(properties) ? properties.filter(p => p.isActive).length : 0,
+        totalBookings: Array.isArray(bookings) ? bookings.length : 0,
+        pendingBookings: Array.isArray(bookings) ? bookings.filter(b => b.status === 'pending').length : 0,
+        confirmedBookings: Array.isArray(bookings) ? bookings.filter(b => b.status === 'confirmed').length : 0,
+        totalRevenue: Array.isArray(bookings)
+            ? bookings.filter(b => b.status !== 'cancelled').reduce((sum, b) => sum + b.totalPrice, 0)
+            : 0
     };
 
     if (loading) {
@@ -160,7 +171,7 @@ export default function HostDashboard() {
                 <div className="p-6">
                     {activeTab === 'properties' ? (
                         <div className="space-y-4">
-                            {properties.length === 0 ? (
+                            {!Array.isArray(properties) || properties.length === 0 ? (
                                 <p className="text-center text-gray-600 py-8">
                                     No properties yet. Add your first property to get started!
                                 </p>
@@ -215,7 +226,7 @@ export default function HostDashboard() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {bookings.length === 0 ? (
+                            {!Array.isArray(bookings) || bookings.length === 0 ? (
                                 <p className="text-center text-gray-600 py-8">No bookings yet</p>
                             ) : (
                                 bookings.map((booking) => (

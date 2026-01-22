@@ -192,8 +192,7 @@ const BookingSchema: Schema = new Schema({
     reservationNumber: {
         type: String,
         unique: true,
-        required: true,
-        index: true
+        required: true
     },
     bookingDate: {
         type: Date,
@@ -214,8 +213,7 @@ const BookingSchema: Schema = new Schema({
     },
     referenceNumber: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
 
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -439,12 +437,10 @@ const BookingSchema: Schema = new Schema({
         }
     },
     qrCode: {
-        type: String,
-        index: true
+        type: String
     },
     barcode: {
-        type: String,
-        index: true
+        type: String
     },
     termsAndConditions: {
         accepted: {
@@ -470,8 +466,7 @@ const BookingSchema: Schema = new Schema({
                 default: 'Point'
             },
             coordinates: {
-                type: [Number],
-                index: '2dsphere'
+                type: [Number]
             },
             address: String,
             timestamp: Date
@@ -483,8 +478,7 @@ const BookingSchema: Schema = new Schema({
                 default: 'Point'
             },
             coordinates: {
-                type: [Number],
-                index: '2dsphere'
+                type: [Number]
             },
             address: String,
             timestamp: Date
@@ -617,7 +611,7 @@ BookingSchema.index({ flightId: 1 });
 BookingSchema.index({ carRentalId: 1 });
 BookingSchema.index({ transferId: 1 });
 BookingSchema.index({ packageId: 1 });
-BookingSchema.index({ reservationNumber: 1 });
+// reservationNumber index automatically created by unique: true
 BookingSchema.index({ referenceNumber: 1 });
 BookingSchema.index({ status: 1, bookingDate: -1 });
 BookingSchema.index({ bookingSource: 1 });

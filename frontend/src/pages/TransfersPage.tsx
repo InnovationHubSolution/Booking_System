@@ -47,8 +47,38 @@ export default function TransfersPage() {
                 if (value) params.append(key, value);
             });
 
-            const response = await api.get(`/transfers?${params.toString()}`);
-            setTransfers(response.data);
+            const response = await api.get(`/transfers/search?${params.toString()}`);
+            const transfersData = Array.isArray(response.data) ? response.data : [];
+            
+            // Transform backend data structure to frontend format
+            const transformedTransfers = transfersData.map((transfer: any) => {
+                // Get the cheapest vehicle option
+                const cheapestVehicle = transfer.vehicleOptions?.reduce((min: any, vehicle: any) => 
+                    vehicle.price < min.price ? vehicle : min
+                , transfer.vehicleOptions[0] || { price: 0, type: 'Sedan', capacity: 4, features: [], image: '' });
+
+                return {
+                    id: transfer._id || transfer.id,
+                    type: transfer.type || 'airport',
+                    from: transfer.route?.from?.name || '',
+                    to: transfer.route?.to?.name || '',
+                    duration: transfer.route?.duration ? `${transfer.route.duration} minutes` : '30 minutes',
+                    price: cheapestVehicle?.price || transfer.pricing?.basePrice || 0,
+                    currency: transfer.pricing?.currency || 'VUV',
+                    vehicleType: cheapestVehicle?.type || 'Sedan',
+                    maxPassengers: cheapestVehicle?.capacity || 4,
+                    description: transfer.description || '',
+                    features: cheapestVehicle?.features || transfer.features || [],
+                    image: cheapestVehicle?.image || transfer.vehicleOptions?.[0]?.image || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop',
+                    provider: {
+                        name: transfer.provider?.name || 'Transfer Service',
+                        rating: transfer.provider?.rating || transfer.rating || 0,
+                        reviews: transfer.provider?.reviewCount || transfer.reviewCount || 0
+                    }
+                };
+            });
+            
+            setTransfers(transformedTransfers);
         } catch (error: any) {
             setError(error.response?.data?.message || 'Failed to load transfers');
         } finally {
@@ -77,7 +107,7 @@ export default function TransfersPage() {
             maxPassengers: 4,
             description: 'Comfortable airport pickup service to Port Vila hotels',
             features: ['Air Conditioning', 'Free WiFi', 'Bottled Water', 'Professional Driver'],
-            image: '/api/placeholder/400/300',
+            image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop',
             provider: {
                 name: 'Vanuatu Transfer Co.',
                 rating: 4.8,
@@ -96,7 +126,7 @@ export default function TransfersPage() {
             maxPassengers: 8,
             description: 'Complete inter-island transfer including flight and ground transportation',
             features: ['Domestic Flight', 'Ground Transfer', 'Luggage Handling', 'Meet & Greet'],
-            image: '/api/placeholder/400/300',
+            image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop',
             provider: {
                 name: 'Island Hopper Transfers',
                 rating: 4.9,
@@ -115,7 +145,7 @@ export default function TransfersPage() {
             maxPassengers: 6,
             description: 'Scenic transfer to the beautiful Mele Cascades waterfall',
             features: ['4WD Vehicle', 'Local Guide', 'Photo Stops', 'Return Transfer'],
-            image: '/api/placeholder/400/300',
+            image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400&h=300&fit=crop',
             provider: {
                 name: 'Adventure Transfers Vanuatu',
                 rating: 4.7,

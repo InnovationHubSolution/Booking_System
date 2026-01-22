@@ -6,19 +6,9 @@
     "auditLog": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\.cb66b9c5debfc7daec6579670c2462fe9aaeb24d-audit.json",
     "files": [
         {
-            "date": 1767503055462,
-            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\http-2026-01-04.log",
-            "hash": "82adb59e4a8434a9413061a032e74286a8853dfb4edb2c00d85b7e5819680313"
-        },
-        {
-            "date": 1767560097438,
-            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\http-2026-01-05.log",
-            "hash": "9db28211b78c7631f957e9b6dd6ae21d6c70706e0cb0f66c3d04016be32fe8ba"
-        },
-        {
-            "date": 1767829263064,
-            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\http-2026-01-08.log",
-            "hash": "3f115a8aa89d52c6579d40f932fc9e9bdc08bfa0f34b23809fb92e3164c3b99f"
+            "date": 1769067443513,
+            "name": "C:\\Users\\jyaruel\\booking-system\\backend\\logs\\http-2026-01-22.log",
+            "hash": "ef50c555f0122798975393bb081e95fcb1538ef302ccc0022177ad9cf737eaf5"
         }
     ],
     "hashType": "sha256"

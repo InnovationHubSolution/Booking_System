@@ -22,6 +22,9 @@ import auditRoutes from './routes/audit';
 import analyticsRoutes from './routes/analytics';
 import scenicToursRoutes from './routes/scenicTours';
 import backupRoutes from './routes/backup';
+import discountRoutes from './routes/discounts';
+import userRoutes from './routes/users';
+import notificationRoutes from './routes/notifications';
 import { auditContextMiddleware } from './middleware/audit';
 import { errorHandler, notFound, handleUncaughtException, handleUnhandledRejection } from './middleware/errorHandler';
 import { securityHeaders, sanitizeData, xssProtection, hppProtection, validateContentType, validateRequestSize } from './middleware/security';
@@ -92,6 +95,9 @@ app.use('/api/promotions', promotionRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/scenic-tours', searchLimiter, scenicToursRoutes);
 app.use('/api/backup', backupRoutes);
+app.use('/api/discounts', discountRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Setup Swagger API documentation
 setupSwagger(app);
@@ -114,12 +120,26 @@ app.get('/api', (req, res) => {
         documentation: '/api-docs',
         endpoints: {
             auth: '/api/auth',
+            users: '/api/users',
             bookings: '/api/bookings',
             properties: '/api/properties',
             flights: '/api/flights',
+            carRentals: '/api/car-rentals',
+            transfers: '/api/transfers',
+            packages: '/api/packages',
+            scenicTours: '/api/scenic-tours',
             services: '/api/services',
             payments: '/api/payments',
-            reviews: '/api/reviews'
+            discounts: '/api/discounts',
+            reviews: '/api/reviews',
+            wishlist: '/api/wishlist',
+            notifications: '/api/notifications',
+            analytics: '/api/analytics',
+            promotions: '/api/promotions',
+            resources: '/api/resources',
+            advanced: '/api/advanced',
+            audit: '/api/audit',
+            backup: '/api/backup'
         }
     });
 });
@@ -1085,7 +1105,7 @@ async function seedDatabase() {
             {
                 company: {
                     name: 'Vanuatu Car Hire',
-                    logo: 'https://via.placeholder.com/100x40?text=VCH',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%234F46E5"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold"%3EVCH%3C/text%3E%3C/svg%3E',
                     rating: 4.5,
                     reviewCount: 150
                 },
@@ -1157,7 +1177,7 @@ async function seedDatabase() {
             {
                 company: {
                     name: 'Island Rentals',
-                    logo: 'https://via.placeholder.com/100x40?text=IR',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%2310B981"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold"%3EIR%3C/text%3E%3C/svg%3E',
                     rating: 4.3,
                     reviewCount: 120
                 },
@@ -1225,7 +1245,7 @@ async function seedDatabase() {
             {
                 company: {
                     name: 'Island 4WD Rentals',
-                    logo: 'https://via.placeholder.com/100x40?text=I4WD',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%23F59E0B"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="bold"%3EI4WD%3C/text%3E%3C/svg%3E',
                     rating: 4.7,
                     reviewCount: 189
                 },
@@ -1292,7 +1312,7 @@ async function seedDatabase() {
             {
                 company: {
                     name: 'Budget Vanuatu',
-                    logo: 'https://via.placeholder.com/100x40?text=Budget',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%23EF4444"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" font-weight="bold"%3EBudget%3C/text%3E%3C/svg%3E',
                     rating: 4.2,
                     reviewCount: 312
                 },
@@ -1361,7 +1381,7 @@ async function seedDatabase() {
             {
                 company: {
                     name: 'Vanuatu Luxury Car Hire',
-                    logo: 'https://via.placeholder.com/100x40?text=VLC',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%23000000"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="13" fill="gold" text-anchor="middle" font-weight="bold"%3EVLC%3C/text%3E%3C/svg%3E',
                     rating: 4.9,
                     reviewCount: 78
                 },
@@ -1439,7 +1459,7 @@ async function seedDatabase() {
                 description: 'Comfortable and reliable airport transfer service to all Port Vila hotels',
                 provider: {
                     name: 'Vanuatu Transfers',
-                    logo: 'https://via.placeholder.com/100x40?text=VT',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%233B82F6"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="bold"%3EVT%3C/text%3E%3C/svg%3E',
                     rating: 4.7,
                     reviewCount: 320
                 },
@@ -1507,7 +1527,7 @@ async function seedDatabase() {
                 description: 'Private transfer with guided city tour of Port Vila attractions',
                 provider: {
                     name: 'Island Tours & Transfers',
-                    logo: 'https://via.placeholder.com/100x40?text=ITT',
+                    logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="40" viewBox="0 0 100 40"%3E%3Crect width="100" height="40" fill="%2306B6D4"/%3E%3Ctext x="50" y="22" font-family="Arial, sans-serif" font-size="13" fill="white" text-anchor="middle" font-weight="bold"%3EITT%3C/text%3E%3C/svg%3E',
                     rating: 4.6,
                     reviewCount: 180
                 },
@@ -2195,6 +2215,139 @@ async function seedDatabase() {
             }
         ]);
         console.log('✅ Sample travel packages created');
+    }
+
+    // Seed discount codes
+    const Discount = (await import('./models/Discount')).default;
+    const discountCount = await Discount.countDocuments();
+    if (discountCount === 0) {
+        const now = new Date();
+        const oneMonthFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const threeMonthsFromNow = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
+        const sixMonthsFromNow = new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000);
+
+        await Discount.insertMany([
+            {
+                code: 'WELCOME10',
+                type: 'percentage',
+                value: 10,
+                description: 'Welcome discount for new customers',
+                validFrom: now,
+                validUntil: sixMonthsFromNow,
+                maxUses: 1000,
+                usedCount: 0,
+                minPurchaseAmount: 5000,
+                applicableCategories: ['all'],
+                userRestrictions: {
+                    newUsersOnly: true,
+                    maxUsesPerUser: 1
+                },
+                isActive: true
+            },
+            {
+                code: 'VANUATU20',
+                type: 'percentage',
+                value: 20,
+                description: 'Special Vanuatu promotion',
+                validFrom: now,
+                validUntil: threeMonthsFromNow,
+                maxUses: 500,
+                usedCount: 0,
+                minPurchaseAmount: 10000,
+                applicableCategories: ['accommodation', 'tour'],
+                isActive: true
+            },
+            {
+                code: 'SUMMER2025',
+                type: 'percentage',
+                value: 15,
+                description: 'Summer season special offer',
+                validFrom: now,
+                validUntil: oneMonthFromNow,
+                maxUses: 200,
+                usedCount: 0,
+                minPurchaseAmount: 7500,
+                applicableCategories: ['all'],
+                userRestrictions: {
+                    maxUsesPerUser: 1
+                },
+                isActive: true
+            },
+            {
+                code: 'FIRSTBOOKING',
+                type: 'fixed',
+                value: 5000,
+                description: 'First booking bonus - 5000 VUV off',
+                validFrom: now,
+                validUntil: sixMonthsFromNow,
+                usedCount: 0,
+                minPurchaseAmount: 15000,
+                applicableCategories: ['all'],
+                userRestrictions: {
+                    newUsersOnly: true,
+                    maxUsesPerUser: 1
+                },
+                isActive: true
+            },
+            {
+                code: 'VIP50',
+                type: 'fixed',
+                value: 50000,
+                description: 'VIP customer exclusive discount',
+                validFrom: now,
+                validUntil: threeMonthsFromNow,
+                maxUses: 50,
+                usedCount: 0,
+                minPurchaseAmount: 200000,
+                applicableCategories: ['all'],
+                maxDiscountAmount: 50000,
+                isActive: true
+            },
+            {
+                code: 'CARRENTAL10',
+                type: 'percentage',
+                value: 10,
+                description: 'Car rental special discount',
+                validFrom: now,
+                validUntil: threeMonthsFromNow,
+                usedCount: 0,
+                minPurchaseAmount: 5000,
+                applicableCategories: ['car-rental'],
+                userRestrictions: {
+                    maxUsesPerUser: 2
+                },
+                isActive: true
+            },
+            {
+                code: 'ADVENTURE15',
+                type: 'percentage',
+                value: 15,
+                description: 'Adventure tours discount',
+                validFrom: now,
+                validUntil: sixMonthsFromNow,
+                usedCount: 0,
+                minPurchaseAmount: 8000,
+                applicableCategories: ['tour', 'activity'],
+                isActive: true
+            },
+            {
+                code: 'EARLYBIRD',
+                type: 'percentage',
+                value: 12,
+                description: 'Early bird booking discount',
+                validFrom: now,
+                validUntil: oneMonthFromNow,
+                maxUses: 300,
+                usedCount: 0,
+                minPurchaseAmount: 10000,
+                applicableCategories: ['all'],
+                userRestrictions: {
+                    maxUsesPerUser: 1
+                },
+                isActive: true
+            }
+        ]);
+        console.log('✅ Sample discount codes created');
     }
 }
 

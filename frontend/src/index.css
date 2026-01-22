@@ -1,38 +1,32 @@
-/* Tailwind CSS imports */
+/* CSS imports must come first */
+@import './styles/pacific-patterns.css';
+@import './styles/tourism-premium.css';
+@import './styles/tourism-animations.css';
+
+/* Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
+/* Global styles with Pacific design */
 body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    /* Ocean to sand gradient with subtle earth tones */
+    background:
+        linear-gradient(135deg,
+            rgba(79, 168, 206, 0.15) 0%,
+            rgba(250, 250, 250, 1) 40%,
+            rgba(212, 184, 150, 0.3) 100%),
+        linear-gradient(45deg,
+            #87CEEB 0%,
+            #FAFAFA 50%,
+            #D4B896 100%);
     background-attachment: fixed;
+    position: relative;
 }
 
-/* Navigation dropdown styles */
-.group:hover .opacity-0 {
-    opacity: 1;
-}
-
-.group:hover .invisible {
-    visibility: visible;
-}
-
-/* Custom transitions for dropdowns */
-.dropdown-enter {
-    opacity: 0;
-    transform: translateY(-10px);
-}
-
-.dropdown-enter-active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 200ms, transform 200ms;
-}
-
-/* Decorative background pattern overlay */
+/* Kastom Mat (Woven) Pattern Overlay */
 body::before {
     content: '';
     position: fixed;
@@ -40,14 +34,100 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.08;
+    background-image:
+        repeating-linear-gradient(45deg,
+            transparent,
+            transparent 15px,
+            rgba(107, 68, 35, 0.02) 15px,
+            rgba(107, 68, 35, 0.02) 16px),
+        repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 15px,
+            rgba(107, 68, 35, 0.02) 15px,
+            rgba(107, 68, 35, 0.02) 16px);
+    opacity: 1;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* Volcanic Stone Texture Overlay */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='18' r='1.8' fill='%232C2C2C' opacity='0.04'/%3E%3Ccircle cx='42' cy='10' r='1.2' fill='%232C2C2C' opacity='0.03'/%3E%3Ccircle cx='26' cy='42' r='1.5' fill='%234A4A4A' opacity='0.035'/%3E%3Ccircle cx='70' cy='30' r='1.6' fill='%232C2C2C' opacity='0.04'/%3E%3Ccircle cx='90' cy='54' r='1.2' fill='%234A4A4A' opacity='0.03'/%3E%3Ccircle cx='50' cy='74' r='1.8' fill='%232C2C2C' opacity='0.035'/%3E%3Ccircle cx='82' cy='94' r='1.5' fill='%232C2C2C' opacity='0.04'/%3E%3Ccircle cx='18' cy='102' r='1.2' fill='%234A4A4A' opacity='0.03'/%3E%3Ccircle cx='106' cy='15' r='1.6' fill='%232C2C2C' opacity='0.035'/%3E%3Ccircle cx='58' cy='108' r='1.3' fill='%234A4A4A' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
     z-index: -1;
-    background-image: url("data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='pattern' x='0' y='0' width='200' height='150' patternUnits='userSpaceOnUse'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.5'%3E%3Ccircle cx='60' cy='40' r='25'/%3E%3Ccircle cx='140' cy='40' r='25'/%3E%3Cpath d='M35 40 Q25 20 40 10 Q55 20 50 40'/%3E%3Cpath d='M85 40 Q75 20 90 10 Q105 20 100 40'/%3E%3Cpath d='M165 40 Q155 20 170 10 Q185 20 180 40'/%3E%3Cpath d='M60 70 L60 110 M50 110 Q60 120 70 110'/%3E%3Cpath d='M140 70 L140 110 M130 110 Q140 120 150 110'/%3E%3Cpath d='M40 80 L50 90 L40 100'/%3E%3Cpath d='M70 80 L80 90 L70 100'/%3E%3Cpath d='M120 80 L130 90 L120 100'/%3E%3Cpath d='M150 80 L160 90 L150 100'/%3E%3C/g%3E%3C/pattern%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23pattern)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
     pointer-events: none;
 }
 
 /* Premium UX Animations */
+
+/* Wave animation for tourism banner */
+@keyframes wave-slow {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-wave-slow {
+    animation: wave-slow 8s linear infinite;
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-wave {
+    animation: wave 6s linear infinite;
+}
+
+/* Bounce slow for icons */
+@keyframes bounce-slow {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
+}
+
+/* Pulse slow for decorative elements */
+@keyframes pulse-slow {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+}
 
 /* Slide In (for toasts) */
 @keyframes slide-in {

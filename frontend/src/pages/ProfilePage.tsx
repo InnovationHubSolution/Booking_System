@@ -64,9 +64,33 @@ export default function ProfilePage() {
         setLoading(true);
         try {
             const response = await api.get('/users/profile');
-            setProfile(response.data);
+            const profileData = response.data?.data || response.data;
+            
+            if (profileData) {
+                setProfile({
+                    firstName: profileData.firstName || '',
+                    lastName: profileData.lastName || '',
+                    email: profileData.email || '',
+                    phone: profileData.phone || '',
+                    dateOfBirth: profileData.dateOfBirth || '',
+                    nationality: profileData.nationality || '',
+                    address: profileData.address || undefined,
+                    emergencyContact: profileData.emergencyContact || undefined,
+                    preferences: {
+                        currency: profileData.preferences?.currency || 'VUV',
+                        language: profileData.preferences?.language || 'en',
+                        newsletter: profileData.preferences?.newsletter ?? true,
+                        smsNotifications: profileData.preferences?.smsNotifications ?? false
+                    }
+                });
+            }
+            setError(null);
         } catch (error: any) {
-            setError(error.response?.data?.message || 'Failed to load profile');
+            console.error('Profile fetch error:', error);
+            // Don't show error if user just doesn't have extended profile yet
+            if (error.response?.status !== 404) {
+                setError(error.response?.data?.message || 'Failed to load profile');
+            }
         } finally {
             setLoading(false);
         }
@@ -77,7 +101,11 @@ export default function ProfilePage() {
         setSaving(true);
         try {
             const response = await api.put('/users/profile', profile);
-            updateUser(response.data);
+            const updatedProfile = response.data?.data || response.data;
+            setProfile({
+                ...profile,
+                ...updatedProfile
+            });
             setNotification({ type: 'success', message: 'Profile updated successfully!' });
         } catch (error: any) {
             setNotification({ type: 'error', message: error.response?.data?.message || 'Failed to update profile' });

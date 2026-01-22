@@ -89,7 +89,7 @@ const PromotionSchema: Schema = new Schema({
     timestamps: true
 });
 
-PromotionSchema.index({ code: 1 });
+// code index automatically created by unique: true
 PromotionSchema.index({ validFrom: 1, validUntil: 1, isActive: 1 });
 PromotionSchema.index({ applicableFor: 1 });
 

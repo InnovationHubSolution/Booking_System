@@ -1,0 +1,497 @@
+/**
+ * Tourism Animations & Effects
+ * Engaging animations specifically for travel and tourism experiences
+ */
+
+/* ============================================
+   FLOATING ANIMATIONS
+   For promotional badges and special offers
+   ============================================ */
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.animate-float-slow {
+    animation: float-slow 4s ease-in-out infinite;
+}
+
+/* ============================================
+   PARALLAX SCROLL EFFECTS
+   ============================================ */
+
+.parallax-slow {
+    transform: translateY(calc(var(--scroll, 0) * 0.5px));
+    will-change: transform;
+}
+
+.parallax-medium {
+    transform: translateY(calc(var(--scroll, 0) * 0.3px));
+    will-change: transform;
+}
+
+/* ============================================
+   HERO IMAGE EFFECTS
+   Dramatic entry animations for hero sections
+   ============================================ */
+
+@keyframes hero-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.hero-fade-in {
+    animation: hero-fade-in 1.5s ease-out;
+}
+
+@keyframes hero-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-slide-up {
+    animation: hero-slide-up 0.8s ease-out;
+}
+
+.hero-slide-up-delay-1 {
+    animation: hero-slide-up 0.8s ease-out 0.2s both;
+}
+
+.hero-slide-up-delay-2 {
+    animation: hero-slide-up 0.8s ease-out 0.4s both;
+}
+
+.hero-slide-up-delay-3 {
+    animation: hero-slide-up 0.8s ease-out 0.6s both;
+}
+
+/* ============================================
+   WAVE PATTERNS
+   Ocean-themed decorative animations
+   ============================================ */
+
+@keyframes wave-motion {
+    0% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.wave-decoration {
+    animation: wave-motion 3s ease-in-out infinite;
+}
+
+/* ============================================
+   HOVER LIFT EFFECTS
+   Enhanced card interactions
+   ============================================ */
+
+.hover-lift {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(10, 74, 107, 0.25);
+}
+
+.hover-lift-subtle {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift-subtle:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(10, 74, 107, 0.15);
+}
+
+/* ============================================
+   ZOOM ON HOVER
+   For image galleries and property photos
+   ============================================ */
+
+.zoom-on-hover {
+    overflow: hidden;
+}
+
+.zoom-on-hover img {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zoom-on-hover:hover img {
+    transform: scale(1.15);
+}
+
+/* ============================================
+   SHINE EFFECT
+   Promotional badges and call-to-action buttons
+   ============================================ */
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(200%) translateY(200%) rotate(45deg);
+    }
+}
+
+.shine-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.shine-effect::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0) 100%);
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+}
+
+.shine-effect:hover::after {
+    animation: shine 0.8s ease-in-out;
+}
+
+/* ============================================
+   TYPEWRITER EFFECT
+   For dynamic text in hero sections
+   ============================================ */
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.cursor-blink::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+}
+
+/* ============================================
+   COUNTER ANIMATION
+   For statistics and numbers
+   ============================================ */
+
+@keyframes count-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.count-up {
+    animation: count-up 0.6s ease-out;
+}
+
+/* ============================================
+   STAGGER ANIMATIONS
+   For lists and grids
+   ============================================ */
+
+.stagger-item-1 {
+    animation: hero-slide-up 0.6s ease-out 0.1s both;
+}
+
+.stagger-item-2 {
+    animation: hero-slide-up 0.6s ease-out 0.2s both;
+}
+
+.stagger-item-3 {
+    animation: hero-slide-up 0.6s ease-out 0.3s both;
+}
+
+.stagger-item-4 {
+    animation: hero-slide-up 0.6s ease-out 0.4s both;
+}
+
+.stagger-item-5 {
+    animation: hero-slide-up 0.6s ease-out 0.5s both;
+}
+
+.stagger-item-6 {
+    animation: hero-slide-up 0.6s ease-out 0.6s both;
+}
+
+/* ============================================
+   TOOLTIP ANIMATIONS
+   ============================================ */
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+    background: rgba(10, 74, 107, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================
+   RIBBON BADGES
+   For featured items and special offers
+   ============================================ */
+
+.ribbon {
+    position: absolute;
+    top: 20px;
+    right: -5px;
+    background: linear-gradient(135deg, #F4A842, #FF6B4A);
+    color: white;
+    padding: 8px 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    box-shadow: 0 4px 12px rgba(244, 168, 66, 0.4);
+    z-index: 10;
+}
+
+.ribbon::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    right: 0;
+    border-top: 10px solid #D98E28;
+    border-left: 10px solid transparent;
+}
+
+/* ============================================
+   PROGRESS BARS
+   For loading and booking progress
+   ============================================ */
+
+.progress-bar {
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1B7FA8, #00A99D);
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent);
+    animation: progress-shimmer 1.5s infinite;
+}
+
+@keyframes progress-shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(200%);
+    }
+}
+
+/* ============================================
+   CONFETTI EFFECT
+   For successful bookings
+   ============================================ */
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #F4A842;
+    animation: confetti-fall 3s ease-in-out forwards;
+    pointer-events: none;
+}
+
+/* ============================================
+   NOTIFICATION ANIMATIONS
+   ============================================ */
+
+@keyframes notification-slide-in {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes notification-slide-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.notification-enter {
+    animation: notification-slide-in 0.4s ease-out;
+}
+
+.notification-exit {
+    animation: notification-slide-out 0.3s ease-in;
+}
+
+/* ============================================
+   RESPONSIVE VISIBILITY
+   ============================================ */
+
+@media (max-width: 640px) {
+    .mobile-hidden {
+        display: none !important;
+    }
+}
+
+@media (min-width: 641px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================
+   PRINT OPTIMIZATIONS
+   ============================================ */
+
+@media print {
+
+    .no-print,
+    .animate-float,
+    .animate-float-slow,
+    .shine-effect,
+    .ribbon {
+        display: none !important;
+    }
+
+    .tourism-card,
+    .glass-card {
+        box-shadow: none !important;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+    }
+}

@@ -7,6 +7,7 @@
         "dev": "ts-node src/server.ts",
         "build": "tsc",
         "seed": "ts-node src/scripts/seedData.ts",
+        "db:update": "ts-node src/scripts/updateDatabase.ts",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:coverage": "jest --coverage",

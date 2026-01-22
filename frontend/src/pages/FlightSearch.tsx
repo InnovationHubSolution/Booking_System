@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import FlightMap from '../components/FlightMap';
 import { useCurrencyStore } from '../store/currencyStore';
 import CurrencySelector from '../components/CurrencySelector';
@@ -85,10 +85,11 @@ const FlightSearch = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/flights/search', {
+            const response = await api.get('/flights/search', {
                 params: searchParams
             });
-            setFlights(response.data);
+            const flightsData = response.data || { outbound: [], return: [] };
+            setFlights(flightsData);
         } catch (error) {
             console.error('Error searching flights:', error);
             alert('Failed to search flights');
